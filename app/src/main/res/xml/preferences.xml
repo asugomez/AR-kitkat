@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/id_category">
+
+        <EditTextPreference
+            android:defaultValue="Default value"
+            android:key="preference_last_name"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/preference_last_name" />
+        <EditTextPreference
+            android:defaultValue="Default value"
+            android:key="preference_last_name"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/preference_first_name" />
+        <EditTextPreference
+            android:defaultValue="Default value"
+            android:key="preference_mail"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/preference_mail" />
+        <EditTextPreference
+            android:defaultValue="Default value"
+            android:key="preference_pass"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/preference_pass" />
+    </PreferenceCategory>
+</PreferenceScreen>
