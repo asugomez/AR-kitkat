@@ -2,6 +2,7 @@ package com.ec.ardesignkitkat.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -46,15 +47,23 @@ class CreationCompteActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id){
             R.id.buttonCréer ->
             {
-                activityScope.launch {
-                    try {
-                        userRepository.mkUser(pseudo.toString(),mdp.toString(),mail.toString())
-                    }
-                    catch (e:Exception)
-                    {
-                        Toast.makeText(this@CreationCompteActivity, "${e.message}", Toast.LENGTH_SHORT).show()
+                if((pseudo?.text.toString()).isEmpty() or (mdp?.text.toString()).isEmpty() or (mail?.text.toString()).isEmpty()) {
+                    Toast.makeText(
+                        this@CreationCompteActivity, "Data is missing", Toast.LENGTH_LONG
+                    ).show()
+                }
+                else{
+                    activityScope.launch {
+                        try {
+                            userRepository.mkUser(pseudo.toString(),mdp.toString(),mail.toString())
+                        }
+                        catch (e:Exception)
+                        {
+                            Toast.makeText(this@CreationCompteActivity, "${e.message}", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
+
             }
         }
     }
