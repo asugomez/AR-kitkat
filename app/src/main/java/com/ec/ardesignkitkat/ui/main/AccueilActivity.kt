@@ -63,14 +63,6 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
     }
 
-    //Méthode permettant de passer à l'activity qui va permettre d'ouvrir la caméra
-    fun openCamera() {
-        val cameraIntent = Intent(this, VisualisationActivity::class.java)
-        cameraIntent.putExtra("clickValue", click)
-        // TODO: add tts_value putextra
-        startActivity(cameraIntent)
-    }
-
 
     /**
      * Gestion des boutons
