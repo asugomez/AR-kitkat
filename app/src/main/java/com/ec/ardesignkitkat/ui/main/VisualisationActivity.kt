@@ -137,7 +137,7 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
                 stopSpeech?.setVisibility(View.GONE);
-                startSpeech?.setVisibility(View.INVISIBLE);
+                //startSpeech?.setVisibility(View.INVISIBLE);
 
             }
         }

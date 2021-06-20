@@ -29,6 +29,7 @@
         <activity android:name=".ui.main.AccueilActivity" />
         <activity android:name=".ui.main.SaveActivity" />
         <activity android:name=".ui.main.SettingsActivity" />
+        <activity android:name=".ui.main.VisualisationActivity"/>
     </application>
 
 </manifest>
