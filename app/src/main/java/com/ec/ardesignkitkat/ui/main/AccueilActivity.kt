@@ -1,5 +1,6 @@
 package com.ec.ardesignkitkat.ui.main
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.ec.ardesignkitkat.R
 import com.vikramezhil.droidspeech.DroidSpeech
 import com.vikramezhil.droidspeech.OnDSListener
@@ -30,7 +32,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.accueil)
         initialize()
-        //ActivityCompat.requestPermissions(this, Manifest.permission.RECORD_AUDIO, 1)
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 1)
     }
 
     fun initialize(){
@@ -38,7 +40,8 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         btnMesure = findViewById(R.id.mesure_btn)
         btnMesure?.setOnClickListener(this)
 
-
+        btnVisualisation = findViewById(R.id.visualisation_btn)
+        btnVisualisation?.setOnClickListener(this)
 
         droidSpeech = DroidSpeech(this, null)
         droidSpeech!!.setOnDroidSpeechListener(this)
