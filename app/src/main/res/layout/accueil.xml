@@ -31,14 +31,21 @@
         app:layout_constraintTop_toBottomOf="@+id/mesure_btn" />
 
     <Button
-        android:id="@+id/btnVoice"
-        android:layout_width="wrap_content"
+        android:id="@+id/virtualStartButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Voice"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.674"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/visualisation_btn"
-        app:layout_constraintVertical_bias="0.497" />
+        android:layout_weight="0.5"
+        android:background="@android:color/transparent"
+        android:text="b1"
+        tools:ignore="MissingConstraints" />
+
+
+    <Button
+        android:id="@+id/virtualStopButton"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="b2"
+        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>
