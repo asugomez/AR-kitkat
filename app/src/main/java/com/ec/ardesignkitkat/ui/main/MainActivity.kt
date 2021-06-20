@@ -4,6 +4,8 @@ package com.ec.ardesignkitkat.ui.main
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -12,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ec.ardesignkitkat.R
 import com.ec.ardesignkitkat.data.UserRepository
+import com.ec.ardesignkitkat.data.source.remote.SessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -30,6 +33,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var btnEnregistrer: TextView?= null
     private var btnInvite: TextView?= null
 
+    private lateinit var sessionManager: SessionManager
+
     val userRepository by lazy { UserRepository.newInstance(application) }
 
     private val activityScope = CoroutineScope(
@@ -44,6 +49,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnOK!!.setOnClickListener(this)
         btnEnregistrer!!.setOnClickListener(this)
         btnInvite!!.setOnClickListener(this)
+
+        sessionManager = SessionManager(application)
     }
 
     fun initialize(){
@@ -84,6 +91,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val hash = userRepository.connexion(ps,mdp)
                 if(hash!=null)
                 {
+                    // Sauvegarder le token
+                    sessionManager.saveAuthToken(hash.hash)
+
                     //Garder dans shared preferences
                     editor.putString("login", ps)
                     editor.commit()

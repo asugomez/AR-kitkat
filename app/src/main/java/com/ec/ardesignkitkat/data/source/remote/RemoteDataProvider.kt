@@ -42,6 +42,10 @@ class RemoteDataProvider {
         return service.getUsers(hash).users
     }
 
+    suspend fun getUserId(hash: String, pseudo: String) : Int {
+        return getUsers(hash).first { it.pseudo == pseudo }.id
+    }
+
     suspend fun getUserData(id_user: Int, hash: String): User{
         return service.getUserData(id_user, hash)
     }

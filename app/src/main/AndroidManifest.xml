@@ -26,6 +26,7 @@
         </activity>
         <activity android:name=".ui.main.CreationCompteActivity">
         </activity>
+        <activity android:name=".ui.main.ProfileActivity"></activity>
     </application>
 
 </manifest>

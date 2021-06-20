@@ -11,9 +11,10 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="mesure_btn_text">Mesure</string>
     <string name="visualisation_btn_text">Visualisation</string>
-    <string name="id_category">Identifiants</string>
-    <string name="preference_last_name">Nom</string>
-    <string name="preference_first_name">Prénom</string>
-    <string name="preference_mail">Mail</string>
-    <string name="preference_pass">Mot de passe</string>
+    <string name="profil">Mon compte</string>
+    <string name="label_pseudo">Pseudo</string>
+    <string name="label_mail">E-mail</string>
+    <string name="label_mdp">Mot de passe</string>
+    <string name="objets">Mes objets</string>
+    <string name="logout">Se déconnecter</string>
 </resources>
