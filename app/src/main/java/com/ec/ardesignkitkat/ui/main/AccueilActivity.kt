@@ -77,11 +77,11 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
      */
     override fun onClick(v: View?) {
         when (v!!.id) {
-            /*R.id.mesure_btn -> {                // vers mesure activity
-                val intent = Intent(this, MesureActivity::class.java)
+            R.id.mesure_btn -> {                // vers mesure activity
+                val intent = Intent(this, VisualisationActivity::class.java)
                 // .apply { putExtra(EXTRA_MESSAGE, "msg")}
                 startActivity(intent)
-            }*/
+            }
             R.id.visualisation_btn -> {          // vers visualisation activity
                 val intent = Intent(this, VisualisationActivity::class.java)
                 // .apply { putExtra(EXTRA_MESSAGE, "msg")}
@@ -97,6 +97,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
+                Toast.makeText(this@AccueilActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
                 startSpeech?.setVisibility(View.GONE);
                 stopSpeech?.setVisibility(View.INVISIBLE);
             }
@@ -105,6 +106,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Closing droid speech
                 // Fermeture de droid speech
                 droidSpeech?.closeDroidSpeechOperations();
+                Toast.makeText(this@AccueilActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
@@ -123,18 +125,20 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         if (finalSpeechResult.equals("Visualiser", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("visualiser")
         ) {
+            Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
             //openCamera()
-            stopSpeech?.performClick()
             btnVisualisation?.performClick()
+            stopSpeech?.performClick()
             //startSpeech.performClick();
         }
 
         if (finalSpeechResult.equals("Mesurer", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("mesurer")
         ) {
+            Toast.makeText(this@AccueilActivity, "final result: mesurer", Toast.LENGTH_SHORT).show()
             //openCamera()
-            stopSpeech?.performClick()
             btnMesure?.performClick()
+            stopSpeech?.performClick()
             //startSpeech.performClick();
         }
     }
