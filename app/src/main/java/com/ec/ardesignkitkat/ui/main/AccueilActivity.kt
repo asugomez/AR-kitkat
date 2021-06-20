@@ -3,6 +3,7 @@ package com.ec.ardesignkitkat.ui.main
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -22,10 +23,16 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     private var btnMesure: Button? = null
     private var btnVisualisation: Button? = null
     private var droidSpeech: DroidSpeech?= null
+
     private var click: Int = 0
     private var internetEnabled = true;
+    private var bugTimeCheckHandler: Handler? = null
+    private var timeCheckRunnable: Runnable? = null
+    private var lastTimeWorking: Long? = null
 
     var TAG = "DroidSpeech 3"
+    private val TIME_RECHECK_DELAY: Int = 5000
+    private val TIME_OUT_DELAY: Int = 4000
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +49,12 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
         btnVisualisation = findViewById(R.id.visualisation_btn)
         btnVisualisation?.setOnClickListener(this)
+
+        //*** Bug detection handlers
+        //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
+        //*** Bug detection handlers
+        //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
+
 
         droidSpeech = DroidSpeech(this, null)
         droidSpeech!!.setOnDroidSpeechListener(this)
@@ -103,7 +116,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
                 stopSpeech?.setVisibility(View.GONE);
-                startSpeech?.setVisibility(View.INVISIBLE);
+                //startSpeech?.setVisibility(View.INVISIBLE);
 
             }
         }
@@ -159,7 +172,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
         // Permet de visualiser des valeurs en nombre à chaque tonalité/ fréquence de la voix détécté
         Log.i(TAG, "Rms change value = $rmsChangedValue")
-        //lastTimeWorking = System.currentTimeMillis()
+        lastTimeWorking = System.currentTimeMillis()
     }
 
     override fun onDroidSpeechLiveResult(liveSpeechResult: String) {
@@ -208,3 +221,20 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
 
 }
+/*
+bugTimeCheckHandler = Handler()
+        timeCheckRunnable = object : Runnable {
+            override fun run() {
+                //Log.i(TAG, "Handler 1 running...");
+                val timeDifference: Long = System.currentTimeMillis() - lastTimeWorking!!
+                if (timeDifference > TIME_OUT_DELAY && internetEnabled) {
+                    //*** Do action (restartActivity or restartListening)
+                    Log.e(TAG, "Bug Detected ! Restart listener...")
+                    stopSpeech!!.performClick()
+                    startSpeech!!.performClick()
+                }
+                bugTimeCheckHandler?.postDelayed(this, TIME_RECHECK_DELAY.toLong())
+            }
+        }
+        bugTimeCheckHandler?.postDelayed(timeCheckRunnable as Runnable, TIME_RECHECK_DELAY.toLong())
+ */
