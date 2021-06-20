@@ -2,6 +2,7 @@ package com.ec.ardesignkitkat.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -14,11 +15,15 @@ import com.vikramezhil.droidspeech.OnDSPermissionsListener
 
 class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     OnDSPermissionsListener {
-    private var btnVoice: Button? = null
+    private var startSpeech: Button? = null
+    private var stopSpeech: Button? = null
     private var btnMesure: Button? = null
     private var btnVisualisation: Button? = null
     private var droidSpeech: DroidSpeech?= null
     private var click: Int = 0
+    private var internetEnabled = true;
+
+    var TAG = "DroidSpeech 3"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,26 +39,23 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         btnMesure?.setOnClickListener(this)
 
 
-        //bouton detection vocale
-        btnVoice = findViewById(R.id.btnVoice)
-        btnVoice?.setOnClickListener(this)
 
         droidSpeech = DroidSpeech(this, null)
         droidSpeech!!.setOnDroidSpeechListener(this)
-        droidSpeech!!.setOnDroidSpeechListener(this);
-        droidSpeech!!.setShowRecognitionProgressView(false);
-        droidSpeech!!.setOneStepResultVerify(false);
+        droidSpeech!!.setOnDroidSpeechListener(this)
+        droidSpeech!!.setShowRecognitionProgressView(false)
+        droidSpeech!!.setOneStepResultVerify(false)
 
         //bouton detection vocale
-        startSpeech = (Button) findViewById(R.id.virtualStartButton);
-        startSpeech.setOnClickListener(this);
+        startSpeech = findViewById(R.id.virtualStartButton)
+        startSpeech?.setOnClickListener(this)
 
-        stopSpeech = (Button) findViewById(R.id.virtualStopButton);
-        stopSpeech.setOnClickListener(this);
+        stopSpeech = findViewById(R.id.virtualStopButton)
+        stopSpeech?.setOnClickListener(this)
 
         //Let's start listening
         //Initiation de l'écoute
-        startSpeech.performClick();
+        startSpeech?.performClick()
 
 
     }
@@ -66,9 +68,6 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         startActivity(cameraIntent)
     }
 
-    override fun onDroidSpeechFinalResult(finalSpeechResult: String?) {
-        // Do whatever you want with the speech result
-    }
 
     /**
      * Gestion des boutons
@@ -85,36 +84,74 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // .apply { putExtra(EXTRA_MESSAGE, "msg")}
                 startActivity(intent)
             }
-            R.id.btnVoice ->{
-                Toast.makeText(this@AccueilActivity, "click sur bouton voice", Toast.LENGTH_SHORT).show()
-                droidSpeech!!.startDroidSpeechRecognition();
+            R.id.virtualStartButton -> {
+
+                // Starting droid speech
+                // Démarrage de droid speech
+
+                //displayDroidSpeech.setContinuousSpeechRecognition(true);
+                droidSpeech?.startDroidSpeechRecognition();
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                startSpeech.setVisibility(View.GONE);
-                stopSpeech.setVisibility(View.INVISIBLE);
+                startSpeech?.setVisibility(View.GONE);
+                stopSpeech?.setVisibility(View.INVISIBLE);
+            }
+            R.id.virtualStopButton-> {
 
-                break;
+                // Closing droid speech
+                // Fermeture de droid speech
+                droidSpeech?.closeDroidSpeechOperations();
+
+                // Setting the view visibilities when droid speech is running
+                // Définir les visibilité des vues quand droid speech est en marche
+                stopSpeech?.setVisibility(View.GONE);
+                startSpeech?.setVisibility(View.INVISIBLE);
+
             }
         }
 
     }
 
-    override fun onDroidSpeechRmsChanged(rmsChangedValue: Float) {
-        TODO("Not yet implemented")
+    override fun onDroidSpeechFinalResult(finalSpeechResult: String) {
+        // Setting the final speech result
+        //Possibilité de modifier les mots-clés
+        //Définir un comportement pour chaque mot-clé
+        if (finalSpeechResult.equals("Visualiser", ignoreCase = true)
+            || finalSpeechResult.toLowerCase().contains("visualiser")
+        ) {
+            //openCamera()
+            stopSpeech?.performClick()
+            btnVisualisation?.performClick()
+            //startSpeech.performClick();
+        }
+
+        if (finalSpeechResult.equals("Mesurer", ignoreCase = true)
+            || finalSpeechResult.toLowerCase().contains("mesurer")
+        ) {
+            //openCamera()
+            stopSpeech?.performClick()
+            btnMesure?.performClick()
+            //startSpeech.performClick();
+        }
     }
+
+
+
 
     override fun onDroidSpeechSupportedLanguages(
         currentSpeechLanguage: String?,
         supportedSpeechLanguages: MutableList<String>?
     ) {
         Log.i(TAG, "Supported speech languages = " + supportedSpeechLanguages.toString());
-        if(supportedSpeechLanguages.contains("fr-FR"))
-        {
-            // Setting the droid speech preferred language as french
-            // Définir la langue préférée du discours de droid speech en français
+        if (supportedSpeechLanguages != null) {
+            if(supportedSpeechLanguages.contains("fr-FR"))
+            {
+                // Setting the droid speech preferred language as french
+                // Définir la langue préférée du discours de droid speech en français
 
-            droidSpeech.setPreferredLanguage("fr-FR");
+                droidSpeech?.setPreferredLanguage("fr-FR");
+            }
         }
         Log.i(TAG, "Current speech language = " + currentSpeechLanguage);
     }
@@ -123,7 +160,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
         // Permet de visualiser des valeurs en nombre à chaque tonalité/ fréquence de la voix détécté
         Log.i(TAG, "Rms change value = $rmsChangedValue")
-        lastTimeWorking = System.currentTimeMillis()
+        //lastTimeWorking = System.currentTimeMillis()
     }
 
     override fun onDroidSpeechLiveResult(liveSpeechResult: String) {
@@ -131,24 +168,11 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         Log.i(TAG, "Live speech result = $liveSpeechResult")
     }
 
-    override fun onDroidSpeechFinalResult(finalSpeechResult: String) {
-
-        // Setting the final speech result
-        //Possibilité de modifier les mots-clés
-        //Définir un comportement pour chaque mot-clé
-        if (finalSpeechResult.equals("Caméra", ignoreCase = true)
-            || finalSpeechResult.toLowerCase().contains("caméra")
-        ) {
-            openCamera()
-            stopSpeech.performClick()
-            //startSpeech.performClick();
-        }
-    }
 
     override fun onDroidSpeechClosedByUser() {
         //Permet de fermer Droid Speech
-        stopSpeech.setVisibility(View.GONE)
-        startSpeech.setVisibility(View.INVISIBLE)
+        stopSpeech?.setVisibility(View.GONE)
+        startSpeech?.setVisibility(View.INVISIBLE)
     }
 
     override fun onDroidSpeechError(errorMsg: String) {
@@ -159,8 +183,8 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         if (errorMsg.toLowerCase().contains("internet")) {
             internetEnabled = false
         }
-        stopSpeech.post(Runnable { // Stop listening
-            stopSpeech.performClick()
+        stopSpeech?.post(Runnable { // Stop listening
+            stopSpeech?.performClick()
         })
     }
 
@@ -169,16 +193,16 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         errorMsgIfAny: String?
     ) {
         if (audioPermissionGiven) {
-            startSpeech.post(Runnable { // Start listening
-                startSpeech.performClick()
+            startSpeech?.post(Runnable { // Start listening
+                startSpeech?.performClick()
             })
         } else {
             if (errorMsgIfAny != null) {
                 // Permissions error
                 Toast.makeText(this, errorMsgIfAny, Toast.LENGTH_LONG).show()
             }
-            stopSpeech.post(Runnable { // Stop listening
-                stopSpeech.performClick()
+            stopSpeech?.post(Runnable { // Stop listening
+                stopSpeech?.performClick()
             })
         }
     }
