@@ -10,19 +10,30 @@ import com.ec.ardesignkitkat.R
 
 
 class AccueilActivity : AppCompatActivity(), View.OnClickListener {
+    private var btnVoice: Button? = null
+    private var btnMesure: Button? = null
+    private var btnVisualisation: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.accueil)
 
+
+
+    }
+
+    fun initialize(){
         // bouton Mesure
-        val btnMesure = findViewById<Button>(R.id.mesure_btn)
-        btnMesure.setOnClickListener(this)
+        btnMesure = findViewById(R.id.mesure_btn)
+        btnMesure?.setOnClickListener(this)
 
         // bouton Visualisation
-        val btnVisualisation = findViewById<Button>(R.id.mesure_btn)
-        btnMesure.setOnClickListener(this)
+        btnVisualisation = findViewById(R.id.visualisation_btn)
+        btnVisualisation?.setOnClickListener(this)
 
+        //bouton detection vocale
+        btnVoice = findViewById(R.id.btnVoice)
+        btnVoice?.setOnClickListener(this)
     }
 
     /**
@@ -30,19 +41,24 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener {
      */
     override fun onClick(v: View?) {
 
-        /*
+
         when (v!!.id) {
-            R.id.mesure_btn ->                  // vers mesure activity
+            /*R.id.mesure_btn -> {                // vers mesure activity
                 val intent = Intent(this, MesureActivity::class.java)
                 // .apply { putExtra(EXTRA_MESSAGE, "msg")}
                 startActivity(intent)
-            R.id.visualisation_btn ->           // vers visualisation activity
+            }*/
+            R.id.visualisation_btn -> {          // vers visualisation activity
                 val intent = Intent(this, VisualisationActivity::class.java)
                 // .apply { putExtra(EXTRA_MESSAGE, "msg")}
                 startActivity(intent)
+            }
+            R.id.btnVoice ->{
+
+            }
         }
 
-         */
+
 
         when (v!!.id) {
             //R.id.mesure_btn -> startActivity(Intent(this, MesureActivity::class.java))
