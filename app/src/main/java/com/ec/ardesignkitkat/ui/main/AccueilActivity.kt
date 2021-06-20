@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ec.ardesignkitkat.R
 
@@ -17,6 +18,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.accueil)
+        initialize()
 
 
 
@@ -40,8 +42,6 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener {
      * Gestion des boutons
      */
     override fun onClick(v: View?) {
-
-
         when (v!!.id) {
             /*R.id.mesure_btn -> {                // vers mesure activity
                 val intent = Intent(this, MesureActivity::class.java)
@@ -54,15 +54,8 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.btnVoice ->{
-
+                Toast.makeText(this@AccueilActivity, "click sur bouton voice", Toast.LENGTH_SHORT).show()
             }
-        }
-
-
-
-        when (v!!.id) {
-            //R.id.mesure_btn -> startActivity(Intent(this, MesureActivity::class.java))
-            //R.id.visualisation_btn -> startActivity(Intent(this, VisualisationActivity::class.java))
         }
 
     }

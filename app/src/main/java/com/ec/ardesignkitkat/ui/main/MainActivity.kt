@@ -75,27 +75,51 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val versCreerCompte = Intent(this, CreationCompteActivity::class.java)
                 startActivity(versCreerCompte)
             }
+            R.id.Invite ->
+            {
+                versAccueil()
+            }
         }
     }
 
     fun login(ps: String, mdp:String){
+
         activityScope.launch {
             try {
-                val hash = userRepository.connexion(ps,mdp)
-                if(hash!=null)
-                {
-                    //Garder dans shared preferences
-                    editor.putString("login", ps)
-                    editor.commit()
-                    val l=sp.getString("login","null")
-                    pseudo?.setText(l.toString())
-                    val versAccueil: Intent= Intent(this@MainActivity, AccueilActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    //versAccueil.putExtra("hash",  )
-                    startActivity(versAccueil)
-                }
-                else
-                    Toast.makeText(this@MainActivity, "Erreur de Connection", Toast.LENGTH_SHORT).show()
+                //val hash = userRepository.connexion(ps,mdp)
+                //if(hash!=null)
+                //{
+                //Garder dans shared preferences
+                editor.putString("login", ps)
+                editor.commit()
+                val l=sp.getString("login","null")
+                pseudo?.setText(l.toString())
+                val versAccueil: Intent= Intent(this@MainActivity, AccueilActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                //versAccueil.putExtra("hash",  )
+                startActivity(versAccueil)
+                //}
+                //else
+                //    Toast.makeText(this@MainActivity, "Erreur de Connection", Toast.LENGTH_SHORT).show()
+            }
+            catch (e:Exception)
+            {
+                Toast.makeText(this@MainActivity, "${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
+    fun versAccueil(){
+        activityScope.launch {
+            try {
+                val versAccueil: Intent= Intent(this@MainActivity, AccueilActivity::class.java)
+                //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                //versAccueil.putExtra("hash",  )
+                startActivity(versAccueil)
+                //}
+                //else
+                //    Toast.makeText(this@MainActivity, "Erreur de Connection", Toast.LENGTH_SHORT).show()
             }
             catch (e:Exception)
             {
