@@ -1,19 +1,33 @@
 package com.ec.ardesignkitkat.ui.main
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.hardware.Camera
+import android.media.MediaRecorder
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.ec.ardesignkitkat.CameraPreview
 import com.ec.ardesignkitkat.R
 import com.vikramezhil.droidspeech.DroidSpeech
 import com.vikramezhil.droidspeech.OnDSListener
 import com.vikramezhil.droidspeech.OnDSPermissionsListener
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     OnDSPermissionsListener {
@@ -22,8 +36,32 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
     private var stopSpeech: Button? = null
     private var droidSpeech: DroidSpeech?= null
 
-    private var imageView: ImageView? = null
     private var btnPrendrePhoto: Button? = null
+
+    private var camera:Camera? = null
+    private var preview: CameraPreview? = null
+    private var mediaRecorder: MediaRecorder? =null
+
+    val MEDIA_TYPE_IMAGE = 1
+    val MEDIA_TYPE_VIDEO = 2
+
+    private val picture = Camera.PictureCallback { data, _ ->
+        val pictureFile: File = getOutputMediaFile(MEDIA_TYPE_IMAGE) ?: run {
+            Log.i("MyCameraApp", ("Error creating media file, check storage permissions"))
+            return@PictureCallback
+        }
+
+        try {
+            val fos = FileOutputStream(pictureFile)
+            fos.write(data)
+            fos.close()
+        } catch (e: FileNotFoundException) {
+            Log.i("MyCameraApp", "File not found: ${e.message}")
+        } catch (e: IOException) {
+            Log.i("MyCameraApp", "Error accessing file: ${e.message}")
+        }
+    }
+
 
     var TAG = "DroidSpeech 3"
 
@@ -38,8 +76,25 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
 
     }
 
+    override fun onPause() {
+        super.onPause()
+        releaseMediaRecorder() // if you are using MediaRecorder, release it first
+        releaseCamera() // release the camera immediately on pause event
+    }
+
+    private fun releaseMediaRecorder() {
+        mediaRecorder?.reset() // clear recorder configuration
+        mediaRecorder?.release() // release the recorder object
+        mediaRecorder = null
+        camera?.lock() // lock camera for later use
+    }
+
+    private fun releaseCamera() {
+        camera?.release() // release the camera for other applications
+        camera = null
+    }
+
     fun initialize(){
-        imageView = findViewById(R.id.image_preview)
         btnPrendrePhoto = findViewById(R.id.capture_button)
         btnPrendrePhoto?.setOnClickListener(this)
 
@@ -59,59 +114,81 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
         //Let's start listening
         //Initiation de l'écoute
         startSpeech?.performClick()
+
+        //camera
+        if (checkCameraHardware(this))
+            camera=getCameraInstance()
+        if (camera!=null)
+        {
+
+            preview = camera?.let {
+                // Create our Preview view
+                CameraPreview(this, it)
+            }
+            preview?.also {
+                val preview: FrameLayout = findViewById(R.id.camera_preview)
+                preview.addView(it)
+            }
+        }
     }
 
-    fun prendrePhoto(view: View) {
-
-        val alertDialog = AlertDialog.Builder(this).create()
-        alertDialog.setTitle("Sauvegarder")
-        alertDialog.setMessage("Voulez-vous sauvegarder ces dimensions ?")
-
-        alertDialog.setButton(
-            AlertDialog.BUTTON_POSITIVE, "Oui"
-        ) { dialog, which -> dialog.cancel() }
-
-        alertDialog.setButton(
-            AlertDialog.BUTTON_NEGATIVE, "Non"
-        ) { dialog, which -> dialog.dismiss() }
-        alertDialog.show()
-
-        val btnPositive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-        val btnNegative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-
-
-        btnPositive.setOnClickListener {
-            withEditText(it)
-            alertDialog.cancel()
-        }
-
-        btnNegative.setOnClickListener {
-            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-
-        }
-
-        val layoutParams = btnPositive.layoutParams as LinearLayout.LayoutParams
-        layoutParams.weight = 10f
-        btnPositive.layoutParams = layoutParams
-        btnNegative.layoutParams = layoutParams
+    private fun checkCameraHardware(context: Context): Boolean {
+        return context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)
     }
 
-    fun withEditText(view: View) {
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-        builder.setTitle("Nom Objet")
-        val dialogLayout = inflater.inflate(R.layout.nom_objet, null)
-        val editText  = dialogLayout.findViewById<EditText>(R.id.editText)
-        builder.setView(dialogLayout)
-        builder.setPositiveButton("Sauvegarder") { dialogInterface, i -> Toast.makeText(applicationContext, "Nom sauvegardé :" + editText.text.toString(), Toast.LENGTH_SHORT).show() }
-        builder.show()
+    private fun getCameraInstance(): Camera? {
+        return try {
+            Camera.open() // attempt to get a Camera instance
+        } catch (e: Exception) {
+            Toast.makeText(this@VisualisationActivity, "${e.message}", Toast.LENGTH_SHORT).show()
+            null // returns null if camera is unavailable
+        }
+    }
+
+    /** Create a file Uri for saving an image or video */
+    private fun getOutputMediaFileUri(type: Int): Uri {
+        return Uri.fromFile(getOutputMediaFile(type))
+    }
+
+    /** Create a File for saving an image or video */
+    private fun getOutputMediaFile(type: Int): File? {
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+
+        val mediaStorageDir = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+            "MyCameraApp"
+        )
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+
+        // Create the storage directory if it does not exist
+        mediaStorageDir.apply {
+            if (!exists()) {
+                if (!mkdirs()) {
+                    Log.i("MyCameraApp", "failed to create directory")
+                    return null
+                }
+            }
+        }
+
+        // Create a media file name
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        return when (type) {
+            MEDIA_TYPE_IMAGE -> {
+                File("${mediaStorageDir.path}${File.separator}IMG_$timeStamp.jpg")
+            }
+            MEDIA_TYPE_VIDEO -> {
+                File("${mediaStorageDir.path}${File.separator}VID_$timeStamp.mp4")
+            }
+            else -> null
+        }
     }
 
     override fun onClick(v: View?) {
         when(v!!.id){
             R.id.capture_button ->{
-                Toast.makeText(this@VisualisationActivity, "appel fonction prendre photo", Toast.LENGTH_SHORT).show()
-                //prendrePhoto(v)
+                camera?.takePicture(null, null, picture)
             }
             R.id.virtualStartButton -> {
 
