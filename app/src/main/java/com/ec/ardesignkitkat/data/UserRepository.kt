@@ -11,6 +11,9 @@ class UserRepository(
     private val localDataProvider: LocalDataProvider,
     private val remoteDataProvider: RemoteDataProvider
 ) {
+
+    public val TAG: String = "ARDesign"
+
     companion object {
         fun newInstance(application: Application): UserRepository {
             return UserRepository(
@@ -22,6 +25,7 @@ class UserRepository(
 
     suspend fun connexion(pseudo: String, pass:String): User {
         return try{
+            Log.v(TAG, "function connexion" )
             remoteDataProvider.connexion(pseudo,pass).also {
                 localDataProvider.saveOrUpdateUser(listOf(it)) // dont know if it works
             }

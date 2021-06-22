@@ -163,6 +163,12 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
             stopSpeech?.performClick()
             //startSpeech.performClick();
         }
+        if (finalSpeechResult.equals("Start", ignoreCase = true)
+            || finalSpeechResult.toLowerCase().contains("video")
+        ){
+            Toast.makeText(this@VisualisationActivity, "TRY AGAIN", Toast.LENGTH_SHORT).show()
+
+        }
     }
 
 

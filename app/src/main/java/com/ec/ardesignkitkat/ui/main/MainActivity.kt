@@ -53,7 +53,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
     private var timeCheckRunnable: Runnable? = null
     private var lastTimeWorking: Long? = null
 
-    var TAG = "DroidSpeech 3"
+    var TAG = "ARDesign"
     private val TIME_RECHECK_DELAY: Int = 5000
     private val TIME_OUT_DELAY: Int = 4000
 
@@ -91,7 +91,6 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
 
 
         droidSpeech = DroidSpeech(this, null)
-        droidSpeech!!.setOnDroidSpeechListener(this)
         droidSpeech!!.setOnDroidSpeechListener(this)
         droidSpeech!!.setShowRecognitionProgressView(false)
         droidSpeech!!.setOneStepResultVerify(false)
@@ -167,12 +166,10 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
 
         activityScope.launch {
             try {
+                Log.v(TAG,"function login")
                 val hash = userRepository.connexion(ps,mdp)
                 if(hash!=null)
                 {
-                    // Sauvegarder le token
-                    sessionManager.saveAuthToken(hash.hash)
-
                     //Garder dans shared preferences
                     editor.putString("login", ps)
                     editor.commit()
@@ -230,7 +227,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
         currentSpeechLanguage: String?,
         supportedSpeechLanguages: MutableList<String>?
     ) {
-        Log.i(TAG, "Supported speech languages = " + supportedSpeechLanguages.toString());
+        Log.v(TAG, "Supported speech languages = " + supportedSpeechLanguages.toString());
         if (supportedSpeechLanguages != null) {
             if(supportedSpeechLanguages.contains("fr-FR"))
             {
@@ -240,13 +237,13 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                 droidSpeech?.setPreferredLanguage("fr-FR");
             }
         }
-        Log.i(TAG, "Current speech language = " + currentSpeechLanguage);
+        Log.v(TAG, "Current speech language = " + currentSpeechLanguage);
     }
 
     override fun onDroidSpeechRmsChanged(rmsChangedValue: Float) {
 
         // Permet de visualiser des valeurs en nombre à chaque tonalité/ fréquence de la voix détécté
-        Log.i(TAG, "Rms change value = $rmsChangedValue")
+        //Log.i(TAG, "Rms change value = $rmsChangedValue")
         lastTimeWorking = System.currentTimeMillis()
     }
 
