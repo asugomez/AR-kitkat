@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -93,11 +92,11 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
             }, 200)
         }
         if (availability.isSupported) {
-            btnMesure.isEnabled = true
-            btnVisualisation.isEnabled = true
+            btnMesure!!.isEnabled  = true
+            btnVisualisation!!.isEnabled = true
         } else { // The device is unsupported or unknown.
-            btnMesure.isEnabled = false
-            btnVisualisation.isEnabled = false
+            btnMesure!!.isEnabled  = false
+            btnVisualisation!!.isEnabled = false
         }
     }
 
@@ -171,6 +170,20 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         }
 
     }
+
+    override fun onDroidSpeechFinalResult(finalSpeechResult: String) {
+        // Setting the final speech result
+        //Possibilité de modifier les mots-clés
+        //Définir un comportement pour chaque mot-clé
+        if (finalSpeechResult.equals("Visualiser", ignoreCase = true)
+            || finalSpeechResult.toLowerCase().contains("visualiser")
+        ) {
+            Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
+            //openCamera()
+            btnVisualisation?.performClick()
+            stopSpeech?.performClick()
+            //startSpeech.performClick();
+        }
 
         if (finalSpeechResult.equals("Mesurer", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("mesurer")
