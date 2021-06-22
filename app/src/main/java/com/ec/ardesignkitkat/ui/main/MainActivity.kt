@@ -48,7 +48,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
     private var droidSpeech: DroidSpeech?= null
 
     private var click: Int = 0
-    private var internetEnabled = true;
+    private var internetEnabled = true
     private var bugTimeCheckHandler: Handler? = null
     private var timeCheckRunnable: Runnable? = null
     private var lastTimeWorking: Long? = null
@@ -137,26 +137,26 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Starting droid speech
                 // Démarrage de droid speech
 
-                //displayDroidSpeech.setContinuousSpeechRecognition(true);
-                droidSpeech?.startDroidSpeechRecognition();
+                //displayDroidSpeech.setContinuousSpeechRecognition(true)
+                droidSpeech?.startDroidSpeechRecognition()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
                 Toast.makeText(this@MainActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
-                startSpeech?.setVisibility(View.GONE);
-                stopSpeech?.setVisibility(View.INVISIBLE);
+                startSpeech?.setVisibility(View.GONE)
+                stopSpeech?.setVisibility(View.INVISIBLE)
             }
             R.id.virtualStopButton-> {
 
                 // Closing droid speech
                 // Fermeture de droid speech
-                droidSpeech?.closeDroidSpeechOperations();
+                droidSpeech?.closeDroidSpeechOperations()
                 Toast.makeText(this@MainActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                stopSpeech?.setVisibility(View.GONE);
-                //startSpeech?.setVisibility(View.INVISIBLE);
+                stopSpeech?.setVisibility(View.GONE)
+                //startSpeech?.setVisibility(View.INVISIBLE)
 
             }
         }

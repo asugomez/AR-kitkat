@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ec.ardesignkitkat.R
-import com.google.ar.core.ArCoreApk
+import com.google.ar.core.A
 import com.vikramezhil.droidspeech.DroidSpeech
 import com.vikramezhil.droidspeech.OnDSListener
 import com.vikramezhil.droidspeech.OnDSPermissionsListener
@@ -84,7 +84,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     }
 
     private fun maybeEnableArButton() {
-        val availability = ArCoreApk.getInstance().checkAvailability(this)
+        val availability: ArCoreApk.Availability = ArCoreApk.getInstance().checkAvailability(this)
         if (availability.isTransient) {
             // Continue to query availability at 5Hz while compatibility is checked in the background.
             Handler().postDelayed({

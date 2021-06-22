@@ -98,8 +98,8 @@ class RemoteDataProvider {
         return service.getUsersFurniture(id_user, id_furn, hash)
     }
 
-    suspend fun addUsersFurniture(id_user: Int, width: String, height: String, length: String, hash: String){
-        return service.addUsersFurniture(id_user, width, height, length, hash)
+    suspend fun addUsersFurniture(id_user: Int, width: String, height: String, length: String, nom: String,hash: String){
+        return service.addUsersFurniture(id_user, width, height, length, nom, hash)
     }
 
     suspend fun rmUsersFurniture(id_user: Int, id_furn: Int, hash: String){

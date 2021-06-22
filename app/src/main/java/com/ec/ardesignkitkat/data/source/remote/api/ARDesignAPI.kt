@@ -75,6 +75,7 @@ interface ARDesignAPI {
                                   @Query("width") width: String,
                                   @Query("heigth") heigth: String,
                                   @Query("length") length: String,
+                                  @Query("nom") nom : String,
                                   @Header("hash") hash: String)
 
     @DELETE("users/{idUser}/furnitures/{idFurn}")

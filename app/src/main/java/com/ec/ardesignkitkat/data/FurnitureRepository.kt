@@ -59,11 +59,11 @@ class FurnitureRepository(
         }
     }
 
-    suspend fun addUsersFurniture(id_user: Int, width: String, height: String, length: String, hash: String){
+    suspend fun addUsersFurniture(id_user: Int, width: String, height: String, length: String,nom:String, hash: String){
         return try{
-            remoteDataProvider.addUsersFurniture(id_user, width, height, length, hash)
+            remoteDataProvider.addUsersFurniture(id_user, width, height, length, nom, hash)
         } catch (e:Exception){
-            localDataProvider.addUsersFurniture(id_user, width, height, length)
+            localDataProvider.addUsersFurniture(id_user, width, height, length, nom)
         }
     }
 
