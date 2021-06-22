@@ -12,7 +12,7 @@ import com.ec.ardesignkitkat.data.model.Furniture
 class FurnitureAdapter(private val dataset: MutableList<Furniture>): RecyclerView.Adapter<FurnitureAdapter.FurnViewHolder>() {
 
     private var mOnItemClickListener: AdapterView.OnItemClickListener? = null
-    private val furnitures: MutableList<Furniture> = mutableListOf()
+    //private val furnitures: MutableList<Furniture> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FurnViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -45,6 +45,7 @@ class FurnitureAdapter(private val dataset: MutableList<Furniture>): RecyclerVie
     class FurnViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val title = itemView.findViewById<TextView>(R.id.mTitle)
         val subtitle = itemView.findViewById<TextView>(R.id.mSubTitle)
+
         //val image= itemView.findViewById<TextView>(R.id.imageObject)
 
         fun bind(furniture: Furniture) {

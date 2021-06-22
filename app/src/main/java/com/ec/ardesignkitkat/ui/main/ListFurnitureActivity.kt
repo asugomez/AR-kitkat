@@ -1,7 +1,9 @@
 package com.ec.ardesignkitkat.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +25,9 @@ class ListFurnitureActivity : AppCompatActivity() {
     private var pseudo: String? = null
     private var hash: String? = null
     private var id_user: String? = null
+    private var progress: View? = null
+    private var list: View? = null
+    private var btnPartager: Button? = null
 
     private var furnitures: MutableList<Furniture> ?= null
     //private var walls: MutableList<Wall> ?= null
@@ -47,7 +52,20 @@ class ListFurnitureActivity : AppCompatActivity() {
         setContentView(R.layout.mes_objets)
         initializeVariables()
         setUpRecyclerView()
-        changeToObjectActivity()
+        //changeToctivity()
+    }
+
+    fun initializeVariables(){
+        progress = findViewById(R.id.progressBarCh)
+        list = findViewById(R.id.mRecycler)
+        btnPartager = findViewById(R.id.btnPartager)
+        btnPartager?.setOnClickListener{
+            partager()
+        }
+    }
+
+    fun partager(){
+        // todo
     }
 
     fun setUpRecyclerView(){
@@ -67,6 +85,7 @@ class ListFurnitureActivity : AppCompatActivity() {
         loadFurnitures()
         recyclerView?.visibility = View.VISIBLE
     }
+
 
     fun loadFurnitures() {
         try{
@@ -120,10 +139,9 @@ class ListFurnitureActivity : AppCompatActivity() {
     }
 
     private fun showProgress(show: Boolean) {
-        val progress = findViewById<View>(R.id.progressBarCh)
-        val list = findViewById<View>(R.id.mRecycler)
-        progress.isVisible = show
-        list.isVisible = !show
+
+        progress?.isVisible = show
+        list?.isVisible = !show
     }
 
 }
