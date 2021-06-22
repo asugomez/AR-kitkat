@@ -3,66 +3,45 @@ package com.ec.ardesignkitkat.ui.main
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.view.Menu
-import android.view.MenuItem
-import android.os.Handler
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ec.ardesignkitkat.R
-import com.google.ar.core.ArCoreApk
 import com.vikramezhil.droidspeech.DroidSpeech
 import com.vikramezhil.droidspeech.OnDSListener
 import com.vikramezhil.droidspeech.OnDSPermissionsListener
 
-
-class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
+class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     OnDSPermissionsListener {
+
     private var startSpeech: Button? = null
     private var stopSpeech: Button? = null
-    private var btnMesure: Button? = null
-    private var btnVisualisation: Button? = null
     private var droidSpeech: DroidSpeech?= null
 
-    private var click: Int = 0
-    private var internetEnabled = true;
-    private var bugTimeCheckHandler: Handler? = null
-    private var timeCheckRunnable: Runnable? = null
-    private var lastTimeWorking: Long? = null
+    private var imageView: ImageView? = null
+    private var btnPrendrePhoto: Button? = null
 
     var TAG = "DroidSpeech 3"
-    private val TIME_RECHECK_DELAY: Int = 5000
-    private val TIME_OUT_DELAY: Int = 4000
+
+    private var internetEnabled = true;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.accueil)
+        setContentView(R.layout.visualisation)
         initialize()
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 1)
 
-        // Enable AR-related functionality on ARCore supported devices only.
-        maybeEnableArButton()
     }
 
     fun initialize(){
-        // bouton Mesure
-        btnMesure = findViewById(R.id.mesure_btn)
-        btnMesure?.setOnClickListener(this)
-
-        btnVisualisation?.setOnClickListener(this)
-        btnVisualisation = findViewById(R.id.visualisation_btn)
-        btnVisualisation?.setOnClickListener(this)
-
-        //*** Bug detection handlers
-        //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
-        //*** Bug detection handlers
-        //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
-
+        imageView = findViewById(R.id.image_preview)
+        btnPrendrePhoto = findViewById(R.id.capture_button)
+        btnPrendrePhoto?.setOnClickListener(this)
 
         droidSpeech = DroidSpeech(this, null)
         droidSpeech!!.setOnDroidSpeechListener(this)
@@ -80,66 +59,59 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         //Let's start listening
         //Initiation de l'écoute
         startSpeech?.performClick()
-
-
     }
 
-    private fun maybeEnableArButton() {
-        val availability = ArCoreApk.getInstance().checkAvailability(this)
-        if (availability.isTransient) {
-            // Continue to query availability at 5Hz while compatibility is checked in the background.
-            Handler().postDelayed({
-                maybeEnableArButton()
-            }, 200)
+    fun prendrePhoto(view: View) {
+
+        val alertDialog = AlertDialog.Builder(this).create()
+        alertDialog.setTitle("Sauvegarder")
+        alertDialog.setMessage("Voulez-vous sauvegarder ces dimensions ?")
+
+        alertDialog.setButton(
+            AlertDialog.BUTTON_POSITIVE, "Oui"
+        ) { dialog, which -> dialog.cancel() }
+
+        alertDialog.setButton(
+            AlertDialog.BUTTON_NEGATIVE, "Non"
+        ) { dialog, which -> dialog.dismiss() }
+        alertDialog.show()
+
+        val btnPositive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        val btnNegative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+
+        btnPositive.setOnClickListener {
+            withEditText(it)
+            alertDialog.cancel()
         }
-        if (availability.isSupported) {
-            btnMesure.isEnabled = true
-            btnVisualisation.isEnabled = true
-        } else { // The device is unsupported or unknown.
-            btnMesure.isEnabled = false
-            btnVisualisation.isEnabled = false
+
+        btnNegative.setOnClickListener {
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
         }
+
+        val layoutParams = btnPositive.layoutParams as LinearLayout.LayoutParams
+        layoutParams.weight = 10f
+        btnPositive.layoutParams = layoutParams
+        btnNegative.layoutParams = layoutParams
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
-        return true
+    fun withEditText(view: View) {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        builder.setTitle("Nom Objet")
+        val dialogLayout = inflater.inflate(R.layout.nom_objet, null)
+        val editText  = dialogLayout.findViewById<EditText>(R.id.editText)
+        builder.setView(dialogLayout)
+        builder.setPositiveButton("Sauvegarder") { dialogInterface, i -> Toast.makeText(applicationContext, "Nom sauvegardé :" + editText.text.toString(), Toast.LENGTH_SHORT).show() }
+        builder.show()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        when (id) {
-            R.id.menu_profil -> {
-                val iProfil = Intent(this, ProfileActivity::class.java)
-                startActivity(iProfil)
-            }
-            R.id.menu_objets -> {
-                //TODO Page des objets
-//                val iObjets = Intent(this, ::class.java)
-//                startActivity(iObjets)
-            }
-            R.id.menu_logout -> {
-                val iLogin = Intent(this, MainActivity::class.java)
-                startActivity(iLogin)
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    /**
-     * Gestion des boutons
-     */
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.mesure_btn -> {                // vers mesure activity
-                val intent = Intent(this, MesureActivity::class.java)
-                // .apply { putExtra(EXTRA_MESSAGE, "msg")}
-                startActivity(intent)
-            }
-            R.id.visualisation_btn -> {          // vers visualisation activity
-                val intent = Intent(this, VisualisationActivity::class.java)
-                // .apply { putExtra(EXTRA_MESSAGE, "msg")}
-                startActivity(intent)
+        when(v!!.id){
+            R.id.capture_button ->{
+                Toast.makeText(this@VisualisationActivity, "appel fonction prendre photo", Toast.LENGTH_SHORT).show()
+                //prendrePhoto(v)
             }
             R.id.virtualStartButton -> {
 
@@ -151,7 +123,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                Toast.makeText(this@AccueilActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@VisualisationActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
                 startSpeech?.setVisibility(View.GONE);
                 stopSpeech?.setVisibility(View.INVISIBLE);
             }
@@ -160,7 +132,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Closing droid speech
                 // Fermeture de droid speech
                 droidSpeech?.closeDroidSpeechOperations();
-                Toast.makeText(this@AccueilActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@VisualisationActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
@@ -169,19 +141,30 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
             }
         }
-
     }
 
-        if (finalSpeechResult.equals("Mesurer", ignoreCase = true)
-            || finalSpeechResult.toLowerCase().contains("mesurer")
+    override fun onDroidSpeechFinalResult(finalSpeechResult: String) {
+        // Setting the final speech result
+        //Possibilité de modifier les mots-clés
+        //Définir un comportement pour chaque mot-clé
+        if (finalSpeechResult.equals("Photo", ignoreCase = true)
+            || finalSpeechResult.toLowerCase().contains("photo")
         ) {
-            Toast.makeText(this@AccueilActivity, "final result: mesurer", Toast.LENGTH_SHORT).show()
-            //openCamera()
-            btnMesure?.performClick()
+            Toast.makeText(this@VisualisationActivity, "final result:photo", Toast.LENGTH_SHORT).show()
+            btnPrendrePhoto?.performClick()
+            stopSpeech?.performClick()
+            //startSpeech.performClick();
+        }
+        if (finalSpeechResult.equals("Video", ignoreCase = true)
+            || finalSpeechResult.toLowerCase().contains("video")
+        ) {
+            Toast.makeText(this@VisualisationActivity, "final result: video", Toast.LENGTH_SHORT).show()
+            btnPrendrePhoto?.performClick()
             stopSpeech?.performClick()
             //startSpeech.performClick();
         }
     }
+
 
 
 
@@ -207,7 +190,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
         // Permet de visualiser des valeurs en nombre à chaque tonalité/ fréquence de la voix détécté
         Log.i(TAG, "Rms change value = $rmsChangedValue")
-        lastTimeWorking = System.currentTimeMillis()
+        //lastTimeWorking = System.currentTimeMillis()
     }
 
     override fun onDroidSpeechLiveResult(liveSpeechResult: String) {
@@ -255,21 +238,6 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     }
 
 
+
+
 }
-/*
-bugTimeCheckHandler = Handler()
-        timeCheckRunnable = object : Runnable {
-            override fun run() {
-                //Log.i(TAG, "Handler 1 running...");
-                val timeDifference: Long = System.currentTimeMillis() - lastTimeWorking!!
-                if (timeDifference > TIME_OUT_DELAY && internetEnabled) {
-                    //*** Do action (restartActivity or restartListening)
-                    Log.e(TAG, "Bug Detected ! Restart listener...")
-                    stopSpeech!!.performClick()
-                    startSpeech!!.performClick()
-                }
-                bugTimeCheckHandler?.postDelayed(this, TIME_RECHECK_DELAY.toLong())
-            }
-        }
-        bugTimeCheckHandler?.postDelayed(timeCheckRunnable as Runnable, TIME_RECHECK_DELAY.toLong())
- */

@@ -11,7 +11,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="300dp"
         android:layout_marginBottom="50dp"
-        android:text="@string/mesure_btn_text"
+        android:text="Mesurer"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/visualisation_btn"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,10 +23,28 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:layout_marginTop="50dp"
-        android:text="@string/visualisation_btn_text"
+        android:text="Visualiser"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mesure_btn" />
+
+    <Button
+        android:id="@+id/virtualStartButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:text="b1"
+        tools:ignore="MissingConstraints" />
+
+
+    <Button
+        android:id="@+id/virtualStopButton"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="b2"
+        tools:ignore="MissingConstraints"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
