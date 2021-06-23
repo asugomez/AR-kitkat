@@ -94,8 +94,8 @@ class LocalDataProvider(
         return furnDao.getUsersFurniture(idFurn, idUser)
     }
 
-    suspend fun addUsersFurniture(idUser: Int, width: String, height: String, length: String){
-        return furnDao.addUsersFurniture(idUser, width, height, length)
+    suspend fun addUsersFurniture(idUser: Int, width: String, height: String, length: String, nom:String){
+        return furnDao.addUsersFurniture(idUser, width, height, length, nom)
     }
 
     suspend fun rmUsersFurniture(idFurn: Int, idUser: Int){

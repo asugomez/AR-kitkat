@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ec.ardesignkitkat.R
-import com.google.ar.core.ArCoreApk
+//import com.google.ar.core.A
 import com.vikramezhil.droidspeech.DroidSpeech
 import com.vikramezhil.droidspeech.OnDSListener
 import com.vikramezhil.droidspeech.OnDSPermissionsListener
@@ -36,6 +36,11 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     var TAG = "DroidSpeech 3"
     private val TIME_RECHECK_DELAY: Int = 5000
     private val TIME_OUT_DELAY: Int = 4000
+    
+    private var hash: String? = null
+    private var id_user: String? = null
+    private var pseudo_user: String? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +61,11 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         btnVisualisation?.setOnClickListener(this)
         btnVisualisation = findViewById(R.id.visualisation_btn)
         btnVisualisation?.setOnClickListener(this)
+
+        //recuperationdes données
+        hash = intent.getStringExtra("hash")
+        id_user = intent.getStringExtra("id_user")
+        pseudo_user = intent.getStringExtra("pseudo_user")
 
         //*** Bug detection handlers
         //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
@@ -84,7 +94,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     }
 
     private fun maybeEnableArButton() {
-        val availability = ArCoreApk.getInstance().checkAvailability(this)
+        /*val availability: ArCoreApk.Availability = ArCoreApk.getInstance().checkAvailability(this)
         if (availability.isTransient) {
             // Continue to query availability at 5Hz while compatibility is checked in the background.
             Handler().postDelayed({
@@ -97,7 +107,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         } else { // The device is unsupported or unknown.
             btnMesure!!.isEnabled  = false
             btnVisualisation!!.isEnabled = false
-        }
+        }*/
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -114,11 +124,15 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
             }
             R.id.menu_objets -> {
                 //TODO Page des objets
-//                val iObjets = Intent(this, ::class.java)
-//                startActivity(iObjets)
+                val iObjets = Intent(this, ListFurnitureActivity::class.java)
+                iObjets.putExtra("hash", hash )
+                iObjets.putExtra("id_user", id_user )
+                iObjets.putExtra("pseudo_user", pseudo_user )
+                startActivity(iObjets)
             }
             R.id.menu_logout -> {
                 val iLogin = Intent(this, MainActivity::class.java)
+                hash = null
                 startActivity(iLogin)
             }
         }

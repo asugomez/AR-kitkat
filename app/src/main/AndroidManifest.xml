@@ -35,7 +35,8 @@
         <activity android:name=".ui.main.SaveActivity" />
         <activity android:name=".ui.main.VisualisationActivity"/>
         <activity android:name=".ui.main.MesureActivity"/>
-        <activity android:name=".ui.main.ProfileActivity"></activity>
+        <activity android:name=".ui.main.ProfileActivity"/>
+        <activity android:name=".ui.main.ListFurnitureActivity"/>
 
         <!-- "AR Optional" app, contains non-AR features that can be used when
          "Google Play Services for AR" (ARCore) is not available. -->
