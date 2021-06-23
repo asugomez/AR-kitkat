@@ -45,9 +45,11 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
     val MEDIA_TYPE_IMAGE = 1
     val MEDIA_TYPE_VIDEO = 2
 
+    var TAGCamera = "MyCameraApp"
+
     private val picture = Camera.PictureCallback { data, _ ->
         val pictureFile: File = getOutputMediaFile(MEDIA_TYPE_IMAGE) ?: run {
-            Log.i("MyCameraApp", ("Error creating media file, check storage permissions"))
+            Log.i(TAGCamera, ("Error creating media file, check storage permissions"))
             return@PictureCallback
         }
 
@@ -56,9 +58,9 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
             fos.write(data)
             fos.close()
         } catch (e: FileNotFoundException) {
-            Log.i("MyCameraApp", "File not found: ${e.message}")
+            Log.i(TAGCamera, "File not found: ${e.message}")
         } catch (e: IOException) {
-            Log.i("MyCameraApp", "Error accessing file: ${e.message}")
+            Log.i(TAGCamera, "Error accessing file: ${e.message}")
         }
     }
 
@@ -82,6 +84,12 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
         releaseCamera() // release the camera immediately on pause event
     }
 
+    override fun onStop() {
+        super.onStop()
+        releaseMediaRecorder() // if you are using MediaRecorder, release it first
+        releaseCamera() // release the camera immediately on pause event
+    }
+
     private fun releaseMediaRecorder() {
         mediaRecorder?.reset() // clear recorder configuration
         mediaRecorder?.release() // release the recorder object
@@ -92,6 +100,7 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
     private fun releaseCamera() {
         camera?.release() // release the camera for other applications
         camera = null
+        Log.i(TAGCamera, "Release camera")
     }
 
     fun initialize(){
@@ -120,7 +129,7 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
             camera=getCameraInstance()
         if (camera!=null)
         {
-
+            Log.i(TAGCamera, "Initialize camera")
             preview = camera?.let {
                 // Create our Preview view
                 CameraPreview(this, it)
@@ -128,6 +137,7 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
             preview?.also {
                 val preview: FrameLayout = findViewById(R.id.camera_preview)
                 preview.addView(it)
+                Log.i(TAGCamera, "Initialize preview")
             }
         }
     }
@@ -166,7 +176,7 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
         mediaStorageDir.apply {
             if (!exists()) {
                 if (!mkdirs()) {
-                    Log.i("MyCameraApp", "failed to create directory")
+                    Log.i(TAGCamera, "failed to create directory")
                     return null
                 }
             }
