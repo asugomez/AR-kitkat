@@ -11,7 +11,7 @@ data class Furniture(
     val width: String,
     val height: String,
     val length: String,
-    val nomObjet : String
+    val nom : String
 ) {
     //constructor(id: String, descObjet: String) : this(id = id, descObjet = descObjet)
 }

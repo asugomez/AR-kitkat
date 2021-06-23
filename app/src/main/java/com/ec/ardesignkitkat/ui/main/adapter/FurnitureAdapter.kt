@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ec.ardesignkitkat.R
@@ -22,11 +23,13 @@ class FurnitureAdapter(private val dataset: MutableList<Furniture>): RecyclerVie
 
     override fun onBindViewHolder(holder: FurnViewHolder, position: Int) {
         holder.bind((dataset[position]))
+        holder.itemView.setOnClickListener{
+
+        }
 
         holder.itemView.setOnClickListener {
-            if (mOnItemClickListener != null) {
-                mOnItemClickListener!!.onItemClick(position)
-            }
+            if (mOnItemClickListener != null) mOnItemClickListener!!.onItemClick(position)
+            //Type mismatch: inferred type is Int but AdapterView<*>! was expected
         }
     }
 
@@ -45,11 +48,12 @@ class FurnitureAdapter(private val dataset: MutableList<Furniture>): RecyclerVie
     class FurnViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val title = itemView.findViewById<TextView>(R.id.mTitle)
         val subtitle = itemView.findViewById<TextView>(R.id.mSubTitle)
+        val btn = itemView.findViewById<Button>(R.id.btnPartager)
 
         //val image= itemView.findViewById<TextView>(R.id.imageObject)
 
         fun bind(furniture: Furniture) {
-            title.text = furniture.nomObjet
+            title.text = furniture.nom
             val l = furniture.length
             val w = furniture.width
             val h = furniture.height
@@ -58,8 +62,15 @@ class FurnitureAdapter(private val dataset: MutableList<Furniture>): RecyclerVie
         }
     }
 
-    interface OnItemClickListener {
+    interface OnItemClickListener : AdapterView.OnItemClickListener {
         fun onItemClick(position: Int)
+
     }
 }
+
+private fun Any.onItemClick(position: Int) {
+
+}
+
+
 
