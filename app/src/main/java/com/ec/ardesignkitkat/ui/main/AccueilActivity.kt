@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ec.ardesignkitkat.R
-//import com.google.ar.core.A
+import com.google.ar.core.ArCoreApk
 import com.vikramezhil.droidspeech.DroidSpeech
 import com.vikramezhil.droidspeech.OnDSListener
 import com.vikramezhil.droidspeech.OnDSPermissionsListener
@@ -33,7 +33,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     private var timeCheckRunnable: Runnable? = null
     private var lastTimeWorking: Long? = null
 
-    var TAG = "DroidSpeech 3"
+    var TAG = "ARDesign accueil"
     private val TIME_RECHECK_DELAY: Int = 5000
     private val TIME_OUT_DELAY: Int = 4000
     
@@ -67,6 +67,8 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         id_user = intent.getStringExtra("id_user")
         pseudo_user = intent.getStringExtra("pseudo_user")
 
+        this.title = "Bienvenue $pseudo_user !"
+
         //*** Bug detection handlers
         //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
         //*** Bug detection handlers
@@ -94,7 +96,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     }
 
     private fun maybeEnableArButton() {
-        /*val availability: ArCoreApk.Availability = ArCoreApk.getInstance().checkAvailability(this)
+        val availability: ArCoreApk.Availability = ArCoreApk.getInstance().checkAvailability(this)
         if (availability.isTransient) {
             // Continue to query availability at 5Hz while compatibility is checked in the background.
             Handler().postDelayed({
@@ -107,7 +109,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         } else { // The device is unsupported or unknown.
             btnMesure!!.isEnabled  = false
             btnVisualisation!!.isEnabled = false
-        }*/
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -123,7 +125,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 startActivity(iProfil)
             }
             R.id.menu_objets -> {
-                //TODO Page des objets
+                //Toast.makeText(this@AccueilActivity, "click sur liste mes objets", Toast.LENGTH_SHORT).show()
                 val iObjets = Intent(this, ListFurnitureActivity::class.java)
                 iObjets.putExtra("hash", hash )
                 iObjets.putExtra("id_user", id_user )
@@ -159,26 +161,26 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Starting droid speech
                 // Démarrage de droid speech
 
-                //displayDroidSpeech.setContinuousSpeechRecognition(true);
-                droidSpeech?.startDroidSpeechRecognition();
+                //droid.setContinuousSpeechRecognition(true);
+                droidSpeech?.startDroidSpeechRecognition()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                Toast.makeText(this@AccueilActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
-                startSpeech?.setVisibility(View.GONE);
-                stopSpeech?.setVisibility(View.INVISIBLE);
+                //Toast.makeText(this@AccueilActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
+                startSpeech?.setVisibility(View.GONE)
+                stopSpeech?.setVisibility(View.INVISIBLE)
             }
             R.id.virtualStopButton-> {
 
                 // Closing droid speech
                 // Fermeture de droid speech
-                droidSpeech?.closeDroidSpeechOperations();
-                Toast.makeText(this@AccueilActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
+                droidSpeech?.closeDroidSpeechOperations()
+                //Toast.makeText(this@AccueilActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                stopSpeech?.setVisibility(View.GONE);
-                //startSpeech?.setVisibility(View.INVISIBLE);
+                stopSpeech?.setVisibility(View.GONE)
+                startSpeech?.setVisibility(View.INVISIBLE);
 
             }
         }
@@ -192,7 +194,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         if (finalSpeechResult.equals("Visualiser", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("visualiser")
         ) {
-            Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
             //openCamera()
             btnVisualisation?.performClick()
             stopSpeech?.performClick()
@@ -202,7 +204,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         if (finalSpeechResult.equals("Mesurer", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("mesurer")
         ) {
-            Toast.makeText(this@AccueilActivity, "final result: mesurer", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this@AccueilActivity, "final result: mesurer", Toast.LENGTH_SHORT).show()
             //openCamera()
             btnMesure?.performClick()
             stopSpeech?.performClick()
@@ -233,7 +235,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     override fun onDroidSpeechRmsChanged(rmsChangedValue: Float) {
 
         // Permet de visualiser des valeurs en nombre à chaque tonalité/ fréquence de la voix détécté
-        Log.i(TAG, "Rms change value = $rmsChangedValue")
+        //Log.i(TAG, "Rms change value = $rmsChangedValue")
         lastTimeWorking = System.currentTimeMillis()
     }
 

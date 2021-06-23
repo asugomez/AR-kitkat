@@ -2,6 +2,7 @@ package com.ec.ardesignkitkat.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -32,6 +33,7 @@ class ListFurnitureActivity : AppCompatActivity() {
     private var furnitures: MutableList<Furniture> ?= null
     //private var walls: MutableList<Wall> ?= null
     //private var stand_furnitures: MutableList<StandardFurniture> ?= null
+    var TAG = "ARDesign furnitures"
 
     private var recyclerView: RecyclerView?= null
     private var adapter: FurnitureAdapter? = null
@@ -60,6 +62,7 @@ class ListFurnitureActivity : AppCompatActivity() {
         hash = intent.getStringExtra("hash")
         id_user = intent.getStringExtra("id_user")
         pseudo_user = intent.getStringExtra("pseudo_user")
+        this.title = "Meubles de $pseudo_user"
 
         progress = findViewById(R.id.progressBarCh)
         list = findViewById(R.id.mRecycler)
@@ -67,9 +70,21 @@ class ListFurnitureActivity : AppCompatActivity() {
         btnPartager?.setOnClickListener{
             partager()
         }
+
+        activityScope.launch{
+            try{
+                if(hash!=null){
+                    val furns = furnitureRepository.getUsersFurnitures(idUser = id_user!!.toInt(), hash!!)
+                    adapter!!.addData(furns)
+                }
+            } catch (e: Exception){
+                Toast.makeText(this@ListFurnitureActivity, "${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     fun partager(){
+
         // todo
     }
 
@@ -87,6 +102,7 @@ class ListFurnitureActivity : AppCompatActivity() {
 
 
         recyclerView?.visibility = View.GONE
+        //Toast.makeText(this@ListFurnitureActivity, "appel a load furnitures", Toast.LENGTH_SHORT).show()
         loadFurnitures()
         recyclerView?.visibility = View.VISIBLE
     }
@@ -95,15 +111,18 @@ class ListFurnitureActivity : AppCompatActivity() {
     fun loadFurnitures() {
         try{
             if(hash!=null){
-                Toast.makeText(this@ListFurnitureActivity, "load meubles", Toast.LENGTH_SHORT).show()
+                //Log.v(TAG,"HASH NOT NULL")
+                //Toast.makeText(this@ListFurnitureActivity, "load meubles", Toast.LENGTH_SHORT).show()
                 furnViewModel.getUserFurnitures(id_user!!.toInt(),hash!!)
                 furnViewModel.furnitures.observe(this) { viewState ->
                     when (viewState) {
                         is FurnViewModel.ViewState.Content -> {
+                            //Log.v(TAG,"HERE view content")
                             showProgress(false)
                         }
                         FurnViewModel.ViewState.Loading -> showProgress(true)
                         is FurnViewModel.ViewState.Error -> {
+                            Toast.makeText(this@ListFurnitureActivity, "ERROR in load meubles", Toast.LENGTH_SHORT).show()
                             showProgress(false)
                             Toast.makeText(this@ListFurnitureActivity, "${viewState.message} ", Toast.LENGTH_SHORT)
                                 .show()
@@ -144,7 +163,6 @@ class ListFurnitureActivity : AppCompatActivity() {
     }
 
     private fun showProgress(show: Boolean) {
-
         progress?.isVisible = show
         list?.isVisible = !show
     }
