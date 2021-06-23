@@ -20,7 +20,7 @@ interface ARDesignAPI {
     @POST("users")
     suspend fun mkUser(@Query("pseudo") pseudo: String,
                        @Query("password") pass: String,
-                       @Query("mail") mail: String)
+                       @Query("mail") mail: String): Login
 
 
 
