@@ -181,6 +181,8 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                     Log.v(TAG,"HASH NOT NULL")
                     val id_user = connexion.id.toString()
                     val pseudo_user = connexion.pseudo
+                    val mail_user = connexion.mail
+                    val pass = connexion.pass
                     //Garder dans shared preferences
                     editor.putString("login", ps)
                     editor.commit()
@@ -191,6 +193,8 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                     versAccueil.putExtra("hash", hash )
                     versAccueil.putExtra("id_user", id_user )
                     versAccueil.putExtra("pseudo_user", pseudo_user )
+                    versAccueil.putExtra("mail_user", mail_user )
+                    versAccueil.putExtra("pass", pass )
                     startActivity(versAccueil)
                 }
                 else
