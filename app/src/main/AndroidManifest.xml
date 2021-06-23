@@ -38,6 +38,8 @@
         <activity android:name=".ui.main.mesure.helloar.HelloArActivity"/>
         <activity android:name=".ui.main.ProfileActivity"/>
         <activity android:name=".ui.main.ListFurnitureActivity"/>
+        <activity android:name=".ui.main.mesure.helloar.HelloArActivity"/>
+        <activity android:name=".ui.main.mesure.helloar.MesurerActivity"/>
 
         <!-- "AR Optional" app, contains non-AR features that can be used when
          "Google Play Services for AR" (ARCore) is not available. -->

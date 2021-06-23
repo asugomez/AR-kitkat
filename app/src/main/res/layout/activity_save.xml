@@ -8,17 +8,13 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/Capture"
+        android:id="@+id/capture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="prendrePhoto"
-        android:text="Capture"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:clickable="true"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:layout_editor_absoluteX="200dp"
-        tools:layout_editor_absoluteY="621dp" />
+        app:srcCompat="@android:drawable/ic_input_add" />
 
     <Button
         android:id="@+id/virtualStartButton"
