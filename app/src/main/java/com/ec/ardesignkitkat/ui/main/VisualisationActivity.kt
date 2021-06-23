@@ -47,24 +47,6 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
 
     var TAGCamera = "MyCameraApp"
 
-    private val picture = Camera.PictureCallback { data, _ ->
-        val pictureFile: File = getOutputMediaFile(MEDIA_TYPE_IMAGE) ?: run {
-            Log.i(TAGCamera, ("Error creating media file, check storage permissions"))
-            return@PictureCallback
-        }
-
-        try {
-            val fos = FileOutputStream(pictureFile)
-            fos.write(data)
-            fos.close()
-        } catch (e: FileNotFoundException) {
-            Log.i(TAGCamera, "File not found: ${e.message}")
-        } catch (e: IOException) {
-            Log.i(TAGCamera, "Error accessing file: ${e.message}")
-        }
-    }
-
-
     var TAG = "DroidSpeech 3"
 
     private var internetEnabled = true;
@@ -164,10 +146,9 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
     private fun getOutputMediaFile(type: Int): File? {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
-
         val mediaStorageDir = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-            "MyCameraApp"
+            "ARDesign"
         )
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
@@ -195,10 +176,36 @@ class VisualisationActivity : AppCompatActivity(), View.OnClickListener, OnDSLis
         }
     }
 
+    private fun getImage()
+    {
+        val mPicture = Camera.PictureCallback { data, _ ->
+            val pictureFile: File = getOutputMediaFile(MEDIA_TYPE_IMAGE) ?: run {
+                Log.i(TAGCamera, ("Error creating media file, check storage permissions"))
+                return@PictureCallback
+            }
+            try {
+                val fos = FileOutputStream(pictureFile)
+                fos.write(data)
+                fos.close()
+            } catch (e: FileNotFoundException) {
+                Log.i(TAGCamera, "File not found: ${e.message}")
+            } catch (e: IOException) {
+                Log.i(TAGCamera, "Error accessing file: ${e.message}")
+            }
+        }
+        try {
+            camera?.takePicture(null, null, mPicture)
+            Log.i(TAGCamera, "Take photo")
+        }catch (e: Exception)
+        {
+            Log.i(TAGCamera, "Error taking photo: ${e.message}")
+        }
+    }
+
     override fun onClick(v: View?) {
         when(v!!.id){
             R.id.capture_button ->{
-                camera?.takePicture(null, null, picture)
+                getImage()
             }
             R.id.virtualStartButton -> {
 
