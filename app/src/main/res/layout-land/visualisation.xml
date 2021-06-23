@@ -24,8 +24,8 @@
 
     <FrameLayout
         android:id="@+id/camera_preview"
-        android:layout_width="411dp"
-        android:layout_height="650dp"
+        android:layout_width="732dp"
+        android:layout_height="334dp"
         android:layout_weight="1"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
