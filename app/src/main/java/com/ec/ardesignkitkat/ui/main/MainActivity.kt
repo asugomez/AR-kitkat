@@ -53,7 +53,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
     private var timeCheckRunnable: Runnable? = null
     private var lastTimeWorking: Long? = null
 
-    var TAG = "ARDesign"
+    var TAG = "ARDesign main"
     private val TIME_RECHECK_DELAY: Int = 5000
     private val TIME_OUT_DELAY: Int = 4000
 
@@ -142,7 +142,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                Toast.makeText(this@MainActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MainActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
                 startSpeech?.setVisibility(View.GONE)
                 stopSpeech?.setVisibility(View.INVISIBLE)
             }
@@ -151,7 +151,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Closing droid speech
                 // Fermeture de droid speech
                 droidSpeech?.closeDroidSpeechOperations()
-                Toast.makeText(this@MainActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MainActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
@@ -171,7 +171,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                 val hash = connexion.hash
                 Log.v(TAG, connexion.toString())
                 Log.v(TAG, hash)
-                Toast.makeText(this@MainActivity, hash, Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MainActivity, hash, Toast.LENGTH_SHORT).show()
                 if(hash!=null)
                 {
                     Log.v(TAG,"HASH NOT NULL")
@@ -190,7 +190,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                     startActivity(versAccueil)
                 }
                 else
-                    Toast.makeText(this@MainActivity, "Erreur de Connection", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Pseudo ou MDP incorrects", Toast.LENGTH_SHORT).show()
             }
             catch (e:Exception)
             {
@@ -203,13 +203,10 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
     fun versAccueil(){
         activityScope.launch {
             try {
-                val versAccueil: Intent= Intent(this@MainActivity, AccueilActivity::class.java)
+                val versAccueil = Intent(this@MainActivity, AccueilActivity::class.java)
                 //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 //versAccueil.putExtra("hash",  )
                 startActivity(versAccueil)
-                //}
-                //else
-                //    Toast.makeText(this@MainActivity, "Erreur de Connection", Toast.LENGTH_SHORT).show()
             }
             catch (e:Exception)
             {

@@ -29,8 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.CreationCompteActivity">
-        </activity>
+        <activity android:name=".ui.main.CreationCompteActivity"/>
         <activity android:name=".ui.main.AccueilActivity" />
         <activity android:name=".ui.main.SaveActivity" />
         <activity android:name=".ui.main.VisualisationActivity"/>

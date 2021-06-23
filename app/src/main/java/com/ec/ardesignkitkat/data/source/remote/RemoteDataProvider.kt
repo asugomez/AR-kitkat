@@ -1,5 +1,6 @@
 package com.ec.ardesignkitkat.data.source.remote
 
+import android.util.Log
 import com.ec.ardesignkitkat.data.model.Furniture
 import com.ec.ardesignkitkat.data.model.StandardFurniture
 import com.ec.ardesignkitkat.data.model.User
@@ -12,8 +13,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RemoteDataProvider {
 
-    //todo: verify if it works with /api or not
     private val BASE_URL = "http://192.168.43.156/~asugomez/AR-design/api/"
+
+    var TAG = "ARDesign remotedataprovider"
 
     val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
         this.level = HttpLoggingInterceptor.Level.BODY
@@ -90,6 +92,8 @@ class RemoteDataProvider {
     }
 
     suspend fun getUsersFurnitures(id_user: Int, hash: String): List<Furniture>{
+        //Log.v(TAG,"inside remotedata getusers furnitures")
+        //Log.v(TAG,service.getUsersFurnitures(id_user, hash).furnitures.toString())
         return service.getUsersFurnitures(id_user, hash).furnitures
     }
 
