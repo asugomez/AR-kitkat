@@ -17,8 +17,8 @@ import kotlinx.coroutines.launch
 
 class ProfileActivity: AppCompatActivity() {
 
-    private lateinit var sp: SharedPreferences
-    private lateinit var sessionManager: SessionManager
+    //private lateinit var sp: SharedPreferences
+    //private lateinit var sessionManager: SessionManager
 
     private var pseudo_user: String? = null
     //private var hash: String? = null
@@ -44,7 +44,7 @@ class ProfileActivity: AppCompatActivity() {
 
     fun initialize(){
         Log.i(TAG, "function initialize")
-        val l = sp.getString("login","null")
+        //val l = sp.getString("login","null")
         pseudo = findViewById(R.id.pseudo)
         mail = findViewById(R.id.mail)
         mdp = findViewById(R.id.mdp)
@@ -54,6 +54,11 @@ class ProfileActivity: AppCompatActivity() {
         pseudo_user = intent.getStringExtra("pseudo_user")
         mail_user = intent.getStringExtra("mail")
         pass = intent.getStringExtra("pass")
+        Toast.makeText(this@ProfileActivity, pseudo_user, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@ProfileActivity, mail_user, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@ProfileActivity, pass, Toast.LENGTH_SHORT).show()
+
+        //pseudo =
 
         pseudo?.text = pseudo_user
         mail?.text = mail_user
@@ -61,11 +66,11 @@ class ProfileActivity: AppCompatActivity() {
 
     }
 
-    private fun alerter(s: String) {
+    /*private fun alerter(s: String) {
         val t = Toast.makeText(this, s, Toast.LENGTH_SHORT)
         Log.i(TAG, s)
         t.show()
-    }
+    }*/
 
 
 }

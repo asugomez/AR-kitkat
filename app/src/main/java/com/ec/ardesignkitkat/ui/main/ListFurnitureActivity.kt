@@ -16,6 +16,8 @@ import com.ec.ardesignkitkat.data.FurnitureRepository
 import com.ec.ardesignkitkat.data.model.Furniture
 import com.ec.ardesignkitkat.ui.main.adapter.FurnitureAdapter
 import com.ec.ardesignkitkat.ui.main.viewmodel.FurnViewModel
+import com.vikramezhil.droidspeech.OnDSListener
+import com.vikramezhil.droidspeech.OnDSPermissionsListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -53,7 +55,9 @@ class ListFurnitureActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mes_objets)
         initializeVariables()
-        setUpRecyclerView()
+        if(hash!=null){
+            setUpRecyclerView()
+        }
         //changeToctivity()
     }
 
@@ -62,14 +66,22 @@ class ListFurnitureActivity : AppCompatActivity() {
         hash = intent.getStringExtra("hash")
         id_user = intent.getStringExtra("id_user")
         pseudo_user = intent.getStringExtra("pseudo_user")
-        this.title = "Meubles de $pseudo_user"
-
         progress = findViewById(R.id.progressBarCh)
         list = findViewById(R.id.mRecycler)
         btnPartager = findViewById(R.id.btnPartager)
-        btnPartager?.setOnClickListener{
+        partager()
+        /*btnPartager?.setOnClickListener{
             partager()
+        }*/
+
+        if(pseudo_user!=null){
+            this.title = "Meubles de $pseudo_user"
+        }else{
+            this.title = "Vous n'êtes pas enregistré !"
+            showProgress(false)
         }
+
+
 
         activityScope.launch{
             try{
@@ -84,8 +96,16 @@ class ListFurnitureActivity : AppCompatActivity() {
     }
 
     fun partager(){
-
-        // todo
+        /*adapter?.setOnItemClickListener(object: FurnitureAdapter.OnItemClickListener{
+            override fun onItemClick(position: Int) {
+                val nom_furn = furnitures?.get(position)?.nom
+                val id_furn = furnitures?.get(position)?.id
+                val l_furn = furnitures?.get(position)?.length
+                val w_furn = furnitures?.get(position)?.width
+                val h_furn = furnitures?.get(position)?.height
+                // todo create qr code
+            }
+        })*/
     }
 
     fun setUpRecyclerView(){

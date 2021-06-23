@@ -71,7 +71,11 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         mail_user = intent.getStringExtra("mail_user")
         pass = intent.getStringExtra("pass")
 
-        this.title = "Bienvenue $pseudo_user !"
+        if(pseudo_user!=null){
+            this.title = "Bienvenue $pseudo_user !"
+        }else{
+            this.title = "Bienvenue !"
+        }
 
         //*** Bug detection handlers
         //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
@@ -129,8 +133,8 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 iProfil.putExtra("hash", hash )
                 iProfil.putExtra("id_user", id_user )
                 iProfil.putExtra("pseudo_user", pseudo_user )
-                iProfil.putExtra("pass", mail_user )
-                iProfil.putExtra("mail", pass )
+                iProfil.putExtra("pass", pass )
+                iProfil.putExtra("mail", mail_user )
                 startActivity(iProfil)
             }
             R.id.menu_objets -> {

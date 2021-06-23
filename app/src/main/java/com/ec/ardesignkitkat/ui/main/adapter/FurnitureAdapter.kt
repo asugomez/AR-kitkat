@@ -17,7 +17,7 @@ class FurnitureAdapter(private val dataset: MutableList<Furniture>): RecyclerVie
 
 
     private var mOnItemClickListener: AdapterView.OnItemClickListener? = null
-    //private val furnitures: MutableList<Furniture> = mutableListOf()
+    private val furnitures: MutableList<Furniture> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FurnViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -43,21 +43,19 @@ class FurnitureAdapter(private val dataset: MutableList<Furniture>): RecyclerVie
         notifyItemChanged(dataset.size)
     }
 
-    /*fun setOnItemClickListener(listener: OnItemClickListener?) {
+    fun setOnItemClickListener(listener: OnItemClickListener) {
         mOnItemClickListener = listener
-    }*/
+    }
 
     class FurnViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val title = itemView.findViewById<TextView>(R.id.mTitle)
         val subtitle = itemView.findViewById<TextView>(R.id.mSubTitle)
         val btn = itemView.findViewById<Button>(R.id.btnPartager)
 
-        //val image= itemView.findViewById<TextView>(R.id.imageObject)
-
         fun bind(furniture: Furniture) {
-            Log.v("ARDesgign","function bin furnviwholder")
+            //Log.v("ARDesgign","function bin furnviwholder")
             title.text = furniture.nom
-            Log.v("ARDesgign",furniture.toString())
+            //Log.v("ARDesgign",furniture.toString())
             val l = furniture.length
             val w = furniture.width
             val h = furniture.height
@@ -66,9 +64,11 @@ class FurnitureAdapter(private val dataset: MutableList<Furniture>): RecyclerVie
         }
     }
 
-    interface OnItemClickListener {
+    interface OnItemClickListener : AdapterView.OnItemClickListener {
         fun onItemClick(position: Int)
     }
+
+    //private fun AdapterView.OnItemClickListener.onItemClick(position: Int) {    }
 }
 
 
