@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -33,7 +35,7 @@
         <activity android:name=".ui.main.AccueilActivity" />
         <activity android:name=".ui.main.SaveActivity" />
         <activity android:name=".ui.main.VisualisationActivity"/>
-        <activity android:name=".ui.main.MesureActivity"/>
+        <activity android:name=".ui.main.mesure.helloar.HelloArActivity"/>
         <activity android:name=".ui.main.ProfileActivity"/>
         <activity android:name=".ui.main.ListFurnitureActivity"/>
 
