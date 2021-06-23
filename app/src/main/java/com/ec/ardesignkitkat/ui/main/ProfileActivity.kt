@@ -19,6 +19,17 @@ class ProfileActivity: AppCompatActivity() {
 
     private lateinit var sp: SharedPreferences
     private lateinit var sessionManager: SessionManager
+
+    private var pseudo_user: String? = null
+    private var hash: String? = null
+    private var id_user: String? = null
+    private var mail_user: String? = null
+    private var pass: String? = null
+
+    private var pseudo: TextView? = null
+    private var mail: TextView? = null
+    private var mdp: TextView? = null
+
     private val userRepository by lazy { UserRepository.newInstance(application) }
     private val remoteDataProvider = RemoteDataProvider()
 
@@ -30,25 +41,24 @@ class ProfileActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+        initialize()
+    }
 
-        val hash = sessionManager.fetchAuthToken()
+    fun initialize(){
         val l = sp.getString("login","null")
-        val pseudo = findViewById<TextView>(R.id.pseudo)
-        val mail = findViewById<TextView>(R.id.mail)
-        val mdp = findViewById<TextView>(R.id.mdp)
+        pseudo = findViewById<TextView>(R.id.pseudo)
+        mail = findViewById<TextView>(R.id.mail)
+        mdp = findViewById<TextView>(R.id.mdp)
 
-        activityScope.launch {
-            try {
-                val uid = remoteDataProvider.getUserId(hash!!, l!!)
-                val user = userRepository.getUserData(uid, hash)
-                pseudo.text = user.pseudo
-                mail.text = user.mail
-                mdp.text = user.pass
+        hash = intent.getStringExtra("hash")
+        id_user = intent.getStringExtra("id_user")
+        pseudo_user = intent.getStringExtra("pseudo_user")
+        mail_user = intent.getStringExtra("mail")
+        pass = intent.getStringExtra("pass")
 
-            } catch (e: Exception) {
-                alerter(e.message.toString())
-            }
-        }
+        pseudo?.text = pseudo_user
+        mail?.text = mail_user
+        mdp?.text = pass
 
     }
 

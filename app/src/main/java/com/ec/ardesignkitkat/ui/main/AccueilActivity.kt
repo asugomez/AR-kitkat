@@ -40,6 +40,8 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     private var hash: String? = null
     private var id_user: String? = null
     private var pseudo_user: String? = null
+    private var mail_user: String? = null
+    private var pass: String? = null
 
 
 
@@ -66,6 +68,8 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         hash = intent.getStringExtra("hash")
         id_user = intent.getStringExtra("id_user")
         pseudo_user = intent.getStringExtra("pseudo_user")
+        mail_user = intent.getStringExtra("mail_user")
+        pass = intent.getStringExtra("pass")
 
         this.title = "Bienvenue $pseudo_user !"
 
@@ -122,6 +126,11 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         when (id) {
             R.id.menu_profil -> {
                 val iProfil = Intent(this, ProfileActivity::class.java)
+                iProfil.putExtra("hash", hash )
+                iProfil.putExtra("id_user", id_user )
+                iProfil.putExtra("pseudo_user", pseudo_user )
+                iProfil.putExtra("pass", mail_user )
+                iProfil.putExtra("mail", pass )
                 startActivity(iProfil)
             }
             R.id.menu_objets -> {
