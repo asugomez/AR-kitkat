@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.os.Handler
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -74,6 +75,9 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
     }
 
     fun initialize(){
+        sp = PreferenceManager.getDefaultSharedPreferences(this)
+        editor = sp.edit()
+
         pseudo = findViewById(R.id.EditUser)
         mdp = findViewById(R.id.EditMdp)
         btnOK = findViewById(R.id.buttonOk)
@@ -178,10 +182,10 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                     val id_user = connexion.id.toString()
                     val pseudo_user = connexion.pseudo
                     //Garder dans shared preferences
-                    //editor.putString("login", ps)
-                    //editor.commit()
-                    //val l=sp.getString("login","null")
-                    //pseudo?.setText(l.toString())
+                    editor.putString("login", ps)
+                    editor.commit()
+                    val l=sp.getString("login","null")
+                    pseudo?.setText(l.toString())
                     val versAccueil: Intent= Intent(this@MainActivity, AccueilActivity::class.java)
                     //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     versAccueil.putExtra("hash", hash )
