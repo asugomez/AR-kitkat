@@ -124,11 +124,15 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
             }
             R.id.menu_objets -> {
                 //TODO Page des objets
-//                val iObjets = Intent(this, ::class.java)
-//                startActivity(iObjets)
+                val iObjets = Intent(this, ListFurnitureActivity::class.java)
+                iObjets.putExtra("hash", hash )
+                iObjets.putExtra("id_user", id_user )
+                iObjets.putExtra("pseudo_user", pseudo_user )
+                startActivity(iObjets)
             }
             R.id.menu_logout -> {
                 val iLogin = Intent(this, MainActivity::class.java)
+                hash = null
                 startActivity(iLogin)
             }
         }

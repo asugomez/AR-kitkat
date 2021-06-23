@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class ListFurnitureActivity : AppCompatActivity() {
 
-    private var pseudo: String? = null
+    private var pseudo_user: String? = null
     private var hash: String? = null
     private var id_user: String? = null
     private var progress: View? = null
@@ -56,6 +56,11 @@ class ListFurnitureActivity : AppCompatActivity() {
     }
 
     fun initializeVariables(){
+        // récuperation des données
+        hash = intent.getStringExtra("hash")
+        id_user = intent.getStringExtra("id_user")
+        pseudo_user = intent.getStringExtra("pseudo_user")
+
         progress = findViewById(R.id.progressBarCh)
         list = findViewById(R.id.mRecycler)
         btnPartager = findViewById(R.id.btnPartager)
@@ -73,7 +78,7 @@ class ListFurnitureActivity : AppCompatActivity() {
         //walls = mutableListOf()
         //stand_furnitures = mutableListOf()
 
-        recyclerView = findViewById<RecyclerView>(R.id.mRecycler)
+        recyclerView = findViewById(R.id.mRecycler)
 
         adapter = FurnitureAdapter(furnitures!!)
 
