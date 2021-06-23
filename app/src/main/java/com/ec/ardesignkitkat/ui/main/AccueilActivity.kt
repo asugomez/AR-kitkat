@@ -217,11 +217,19 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         if (finalSpeechResult.equals("Mesurer", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("mesurer")
         ) {
-            //Toast.makeText(this@AccueilActivity, "final result: mesurer", Toast.LENGTH_SHORT).show()
-            //openCamera()
             btnMesure?.performClick()
             stopSpeech?.performClick()
-            //startSpeech.performClick();
+        }
+
+        if (finalSpeechResult.equals("Mes objets", ignoreCase = true)
+            || finalSpeechResult.toLowerCase().contains("mes objets")
+        ) {
+            val iObjets = Intent(this, ListFurnitureActivity::class.java)
+            iObjets.putExtra("hash", hash )
+            iObjets.putExtra("id_user", id_user )
+            iObjets.putExtra("pseudo_user", pseudo_user )
+            startActivity(iObjets)
+            stopSpeech?.performClick()
         }
     }
 
