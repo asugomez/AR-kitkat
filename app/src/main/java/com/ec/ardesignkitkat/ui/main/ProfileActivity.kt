@@ -21,8 +21,8 @@ class ProfileActivity: AppCompatActivity() {
     private lateinit var sessionManager: SessionManager
 
     private var pseudo_user: String? = null
-    private var hash: String? = null
-    private var id_user: String? = null
+    //private var hash: String? = null
+    //private var id_user: String? = null
     private var mail_user: String? = null
     private var pass: String? = null
 
@@ -30,13 +30,11 @@ class ProfileActivity: AppCompatActivity() {
     private var mail: TextView? = null
     private var mdp: TextView? = null
 
-    private val userRepository by lazy { UserRepository.newInstance(application) }
-    private val remoteDataProvider = RemoteDataProvider()
+    private val TAG = "ARDesign profile"
 
-    private val activityScope = CoroutineScope(
-        SupervisorJob()
-                + Dispatchers.Main
-    )
+    //private val userRepository by lazy { UserRepository.newInstance(application) }
+    //private val remoteDataProvider = RemoteDataProvider()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,13 +43,14 @@ class ProfileActivity: AppCompatActivity() {
     }
 
     fun initialize(){
+        Log.i(TAG, "function initialize")
         val l = sp.getString("login","null")
-        pseudo = findViewById<TextView>(R.id.pseudo)
-        mail = findViewById<TextView>(R.id.mail)
-        mdp = findViewById<TextView>(R.id.mdp)
+        pseudo = findViewById(R.id.pseudo)
+        mail = findViewById(R.id.mail)
+        mdp = findViewById(R.id.mdp)
 
-        hash = intent.getStringExtra("hash")
-        id_user = intent.getStringExtra("id_user")
+        //hash = intent.getStringExtra("hash")
+        //id_user = intent.getStringExtra("id_user")
         pseudo_user = intent.getStringExtra("pseudo_user")
         mail_user = intent.getStringExtra("mail")
         pass = intent.getStringExtra("pass")
@@ -64,12 +63,9 @@ class ProfileActivity: AppCompatActivity() {
 
     private fun alerter(s: String) {
         val t = Toast.makeText(this, s, Toast.LENGTH_SHORT)
-        Log.i(CAT, s)
+        Log.i(TAG, s)
         t.show()
     }
 
-    companion object {
-        private const val CAT = "AR"
-    }
 
 }
