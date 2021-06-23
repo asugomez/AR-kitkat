@@ -13,8 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RemoteDataProvider {
 
     //todo: verify if it works with /api or not
-    //192.168.0.102
-    private val BASE_URL = "http://10.0.2.2/~asugomez/AR-design/api/"
+    private val BASE_URL = "http://192.168.43.156/~asugomez/AR-design/api/"
 
     val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
         this.level = HttpLoggingInterceptor.Level.BODY
@@ -35,7 +34,7 @@ class RemoteDataProvider {
 
     //////////////      USER        //////////////
     suspend fun connexion(pseudo: String, pass:String): User {
-        return service.connexion(pseudo, pass)
+        return service.connexion(pseudo, pass).user
     }
 
     suspend fun getUsers(hash: String): List<User>{

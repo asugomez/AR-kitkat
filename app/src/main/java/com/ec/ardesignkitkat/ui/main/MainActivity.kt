@@ -167,17 +167,26 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
         activityScope.launch {
             try {
                 Log.v(TAG,"function login")
-                val hash = userRepository.connexion(ps,mdp)
+                val connexion = userRepository.connexion(ps,mdp)
+                val hash = connexion.hash
+                Log.v(TAG, connexion.toString())
+                Log.v(TAG, hash)
+                Toast.makeText(this@MainActivity, hash, Toast.LENGTH_SHORT).show()
                 if(hash!=null)
                 {
+                    Log.v(TAG,"HASH NOT NULL")
+                    val id_user = connexion.id.toString()
+                    val pseudo_user = connexion.pseudo
                     //Garder dans shared preferences
-                    editor.putString("login", ps)
-                    editor.commit()
-                    val l=sp.getString("login","null")
-                    pseudo?.setText(l.toString())
+                    //editor.putString("login", ps)
+                    //editor.commit()
+                    //val l=sp.getString("login","null")
+                    //pseudo?.setText(l.toString())
                     val versAccueil: Intent= Intent(this@MainActivity, AccueilActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    //versAccueil.putExtra("hash",  )
+                    //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    versAccueil.putExtra("hash", hash )
+                    versAccueil.putExtra("id_user", id_user )
+                    versAccueil.putExtra("pseudo_user", pseudo_user )
                     startActivity(versAccueil)
                 }
                 else

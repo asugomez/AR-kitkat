@@ -8,7 +8,7 @@ interface ARDesignAPI {
     //////////////      USER        //////////////
     @POST("authenticate")
     suspend fun connexion(@Query("user") user: String,
-                          @Query("password") password: String) : User
+                          @Query("password") password: String) : Login
 
     @GET("users")
     suspend fun getUsers(@Header("hash") hash: String): UserResponse

@@ -26,10 +26,14 @@ class UserRepository(
     suspend fun connexion(pseudo: String, pass:String): User {
         return try{
             Log.v(TAG, "function connexion" )
+            Log.v(TAG, "pseudo: " +pseudo )
+            Log.v(TAG, "passsword. " + pass )
             remoteDataProvider.connexion(pseudo,pass).also {
+                Log.v(TAG, "here in also connexion" )
                 localDataProvider.saveOrUpdateUser(listOf(it)) // dont know if it works
             }
         } catch (e: Exception){
+            Log.v(TAG, "function connexion EXCEPTion" )
             localDataProvider.connexion(pseudo, pass)
         }
     }

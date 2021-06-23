@@ -36,6 +36,11 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     var TAG = "DroidSpeech 3"
     private val TIME_RECHECK_DELAY: Int = 5000
     private val TIME_OUT_DELAY: Int = 4000
+    
+    private var hash: String? = null
+    private var id_user: String? = null
+    private var pseudo_user: String? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +61,11 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         btnVisualisation?.setOnClickListener(this)
         btnVisualisation = findViewById(R.id.visualisation_btn)
         btnVisualisation?.setOnClickListener(this)
+
+        //recuperationdes données
+        hash = intent.getStringExtra("hash")
+        id_user = intent.getStringExtra("id_user")
+        pseudo_user = intent.getStringExtra("pseudo_user")
 
         //*** Bug detection handlers
         //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
