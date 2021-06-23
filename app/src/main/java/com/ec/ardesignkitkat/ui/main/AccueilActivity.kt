@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ec.ardesignkitkat.R
+import com.ec.ardesignkitkat.ui.main.mesure.helloar.HelloArActivity
 import com.google.ar.core.ArCoreApk
 import com.vikramezhil.droidspeech.DroidSpeech
 import com.vikramezhil.droidspeech.OnDSListener
@@ -113,9 +114,8 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 startActivity(iProfil)
             }
             R.id.menu_objets -> {
-                //TODO Page des objets
-//                val iObjets = Intent(this, ::class.java)
-//                startActivity(iObjets)
+                val iObjets = Intent(this, MesObjetsActivity::class.java)
+                startActivity(iObjets)
             }
             R.id.menu_logout -> {
                 val iLogin = Intent(this, MainActivity::class.java)
@@ -131,7 +131,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.mesure_btn -> {                // vers mesure activity
-                val intent = Intent(this, MesureActivity::class.java)
+                val intent = Intent(this, HelloArActivity::class.java)
                 // .apply { putExtra(EXTRA_MESSAGE, "msg")}
                 startActivity(intent)
             }
