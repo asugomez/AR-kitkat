@@ -54,11 +54,9 @@ class ProfileActivity: AppCompatActivity() {
         pseudo_user = intent.getStringExtra("pseudo_user")
         mail_user = intent.getStringExtra("mail")
         pass = intent.getStringExtra("pass")
-        Toast.makeText(this@ProfileActivity, pseudo_user, Toast.LENGTH_SHORT).show()
-        Toast.makeText(this@ProfileActivity, mail_user, Toast.LENGTH_SHORT).show()
-        Toast.makeText(this@ProfileActivity, pass, Toast.LENGTH_SHORT).show()
-
-        //pseudo =
+        //Toast.makeText(this@ProfileActivity, pseudo_user, Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this@ProfileActivity, mail_user, Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this@ProfileActivity, pass, Toast.LENGTH_SHORT).show()
 
         pseudo?.text = pseudo_user
         mail?.text = mail_user

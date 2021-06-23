@@ -51,8 +51,9 @@ class RemoteDataProvider {
         return service.getUserData(id_user, hash)
     }
 
-    suspend fun mkUser(pseudo: String, pass: String, mail: String){
-        return service.mkUser(pseudo, pass, mail)
+    suspend fun mkUser(pseudo: String, pass: String, mail: String): User{
+        Log.v(TAG, "mkuser remotedataprovider" )
+        return service.mkUser(pseudo, pass, mail).user
     }
 
     //////////////      WALL       //////////////

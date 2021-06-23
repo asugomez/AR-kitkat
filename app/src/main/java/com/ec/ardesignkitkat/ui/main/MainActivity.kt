@@ -202,7 +202,8 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
             }
             catch (e:Exception)
             {
-                Toast.makeText(this@MainActivity, "${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Pseudo ou MDP incorrects", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MainActivity, "${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
 
