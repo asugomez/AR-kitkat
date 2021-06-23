@@ -20,6 +20,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import com.vikramezhil.droidspeech.DroidSpeech
 import com.vikramezhil.droidspeech.OnDSListener
 import com.vikramezhil.droidspeech.OnDSPermissionsListener
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-class ListFurnitureActivity : AppCompatActivity() {
+class ListFurnitureActivity : AppCompatActivity(),View.OnClickListener,OnDSListener,OnDSPermissionsListener {
 
     private var pseudo_user: String? = null
     private var hash: String? = null
@@ -37,6 +38,11 @@ class ListFurnitureActivity : AppCompatActivity() {
     private var btnPartager: Button? = null
     private var mTitle: TextView? = null
     private var imageView3: ImageView? = null
+
+    private var startSpeech: Button? = null
+    private var stopSpeech: Button? = null
+    private var droidSpeech: DroidSpeech?= null
+    private var internetEnabled = true;
 
     private var furnitures: MutableList<Furniture> ?= null
     //private var walls: MutableList<Wall> ?= null
@@ -51,6 +57,8 @@ class ListFurnitureActivity : AppCompatActivity() {
     val furnitureRepository by lazy { FurnitureRepository.newInstance(application) }
     //val wallRepository by lazy { WallRepository.newInstance(application) }
     //val standFurnRepository by lazy { StandardFurnitureRepository.newInstance(application) }
+
+    var TAGVoix = "DroidSpeech 3"
 
     private val activityScope = CoroutineScope(
         SupervisorJob()
@@ -105,6 +113,19 @@ class ListFurnitureActivity : AppCompatActivity() {
             this.title = "Vous n'êtes pas enregistré !"
             showProgress(false)
         }
+
+        droidSpeech = DroidSpeech(this, null)
+        droidSpeech!!.setOnDroidSpeechListener(this)
+        droidSpeech!!.setOnDroidSpeechListener(this)
+        droidSpeech!!.setShowRecognitionProgressView(false)
+        droidSpeech!!.setOneStepResultVerify(false)
+
+        //bouton detection vocale
+        startSpeech = findViewById(R.id.virtualStartButton)
+        startSpeech?.setOnClickListener(this)
+
+        stopSpeech = findViewById(R.id.virtualStopButton)
+        stopSpeech?.setOnClickListener(this)
 
 
 
@@ -224,5 +245,123 @@ class ListFurnitureActivity : AppCompatActivity() {
         progress?.isVisible = show
         list?.isVisible = !show
     }
+
+    override fun onClick(v: View?) {
+        when(v!!.id)
+        {
+            R.id.virtualStartButton -> {
+
+                // Starting droid speech
+                // Démarrage de droid speech
+
+                //displayDroidSpeech.setContinuousSpeechRecognition(true);
+                droidSpeech?.startDroidSpeechRecognition();
+
+                // Setting the view visibilities when droid speech is running
+                // Définir les visibilité des vues quand droid speech est en marche
+                Toast.makeText(this@ListFurnitureActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
+                startSpeech?.setVisibility(View.GONE);
+                stopSpeech?.setVisibility(View.INVISIBLE);
+            }
+            R.id.virtualStopButton-> {
+
+                // Closing droid speech
+                // Fermeture de droid speech
+                droidSpeech?.closeDroidSpeechOperations();
+                Toast.makeText(this@ListFurnitureActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
+
+                // Setting the view visibilities when droid speech is running
+                // Définir les visibilité des vues quand droid speech est en marche
+                stopSpeech?.setVisibility(View.GONE);
+                //startSpeech?.setVisibility(View.INVISIBLE);
+
+            }
+        }
+    }
+
+    override fun onDroidSpeechFinalResult(finalSpeechResult: String?) {
+        if (finalSpeechResult != null) {
+            if (finalSpeechResult.equals("Partager", ignoreCase = true)
+                || finalSpeechResult.toLowerCase().contains("partager")
+            ) {
+                //Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
+                //openCamera()
+                btnPartager?.performClick()
+                stopSpeech?.performClick()
+                //startSpeech.performClick();
+            }
+        }
+    }
+
+    override fun onDroidSpeechSupportedLanguages(
+        currentSpeechLanguage: String?,
+        supportedSpeechLanguages: MutableList<String>?
+    ) {
+        Log.i(TAGVoix, "Supported speech languages = " + supportedSpeechLanguages.toString());
+        if (supportedSpeechLanguages != null) {
+            if(supportedSpeechLanguages.contains("fr-FR"))
+            {
+                // Setting the droid speech preferred language as french
+                // Définir la langue préférée du discours de droid speech en français
+
+                droidSpeech?.setPreferredLanguage("fr-FR");
+            }
+        }
+        Log.i(TAGVoix, "Current speech language = " + currentSpeechLanguage);
+    }
+
+    override fun onDroidSpeechRmsChanged(rmsChangedValue: Float) {
+        // Permet de visualiser des valeurs en nombre à chaque tonalité/ fréquence de la voix détécté
+        Log.i(TAGVoix, "Rms change value = $rmsChangedValue")
+        //lastTimeWorking = System.currentTimeMillis()
+    }
+
+    override fun onDroidSpeechLiveResult(liveSpeechResult: String?) {
+        // Permet de visualiser le mot détécté prédefinit
+        Log.i(TAGVoix, "Live speech result = $liveSpeechResult")
+    }
+
+
+    override fun onDroidSpeechClosedByUser() {
+        //Permet de fermer Droid Speech
+        stopSpeech?.setVisibility(View.GONE)
+        startSpeech?.setVisibility(View.INVISIBLE)
+    }
+
+    override fun onDroidSpeechError(errorMsg: String?) {
+        // Speech error
+        // Permet d'afficher s'il y a une erreur
+        //Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show();
+        Log.i(TAGVoix, "Error $errorMsg")
+        if (errorMsg != null) {
+            if (errorMsg.toLowerCase().contains("internet")) {
+                internetEnabled = false
+            }
+        }
+        stopSpeech?.post(Runnable { // Stop listening
+            stopSpeech?.performClick()
+        })
+    }
+
+    override fun onDroidSpeechAudioPermissionStatus(
+        audioPermissionGiven: Boolean,
+        errorMsgIfAny: String?
+    ) {
+        if (audioPermissionGiven) {
+            startSpeech?.post(Runnable { // Start listening
+                startSpeech?.performClick()
+            })
+        } else {
+            if (errorMsgIfAny != null) {
+                // Permissions error
+                Toast.makeText(this, errorMsgIfAny, Toast.LENGTH_LONG).show()
+            }
+            stopSpeech?.post(Runnable { // Stop listening
+                stopSpeech?.performClick()
+            })
+        }
+    }
+
+
 
 }

@@ -31,6 +31,8 @@ class SaveActivity : AppCompatActivity(),View.OnClickListener,OnDSListener,OnDSP
     private var hash: String? = null
     private var id_user: Int? = null
 
+    private var alertDialog: AlertDialog? =null
+
 
     var TAG = "DroidSpeech 3"
 
@@ -72,30 +74,28 @@ class SaveActivity : AppCompatActivity(),View.OnClickListener,OnDSListener,OnDSP
 
 
     fun prendrePhoto() {
+        alertDialog = AlertDialog.Builder(this).create()
+        alertDialog!!.setTitle("Sauvegarder")
+        alertDialog!!.setMessage("Voulez-vous sauvegarder ces dimensions ?")
 
-        val alertDialog = AlertDialog.Builder(this).create()
-        alertDialog.setTitle("Sauvegarder")
-        alertDialog.setMessage("Voulez-vous sauvegarder ces dimensions ?")
-
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Oui"
+        alertDialog!!.setButton(AlertDialog.BUTTON_POSITIVE, "Oui"
         ) { dialog, which -> dialog.cancel() }
 
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Non"
+        alertDialog!!.setButton(AlertDialog.BUTTON_NEGATIVE, "Non"
         ) { dialog, which -> dialog.dismiss() }
-        alertDialog.show()
+        alertDialog!!.show()
 
-        val btnPositive = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-        val btnNegative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+        val btnPositive = alertDialog!!.getButton(AlertDialog.BUTTON_POSITIVE)
+        val btnNegative = alertDialog!!.getButton(AlertDialog.BUTTON_NEGATIVE)
 
 
         btnPositive.setOnClickListener {
             withEditText(it)
-            alertDialog.cancel()
+            alertDialog!!.cancel()
         }
 
         btnNegative.setOnClickListener {
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-
         }
 
         val layoutParams = btnPositive.layoutParams as LinearLayout.LayoutParams
@@ -172,6 +172,47 @@ class SaveActivity : AppCompatActivity(),View.OnClickListener,OnDSListener,OnDSP
                 //startSpeech?.setVisibility(View.INVISIBLE);
 
             }
+            AlertDialog.BUTTON_POSITIVE->
+            {
+                withEditText(v)
+                alertDialog?.cancel()
+            }
+            AlertDialog.BUTTON_NEGATIVE->
+            {
+                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            }
+        }
+    }
+
+    override fun onDroidSpeechFinalResult(finalSpeechResult: String?) {
+        if (finalSpeechResult != null) {
+            if (finalSpeechResult.equals("Sauvegarder", ignoreCase = true)
+                || finalSpeechResult.toLowerCase().contains("sauvegarder")
+            ) {
+                //Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
+                //openCamera()
+                prendrePhoto()
+                stopSpeech?.performClick()
+                //startSpeech.performClick();
+            }
+        }
+        if (finalSpeechResult != null) {
+            if (finalSpeechResult.equals("Oui", ignoreCase = true)
+                || finalSpeechResult.toLowerCase().contains("oui")
+            ) {
+
+                stopSpeech?.performClick()
+
+            }
+        }
+        if (finalSpeechResult != null) {
+            if (finalSpeechResult.equals("Non", ignoreCase = true)
+                || finalSpeechResult.toLowerCase().contains("non")
+            ) {
+
+                stopSpeech?.performClick()
+
+            }
         }
     }
 
@@ -201,20 +242,6 @@ class SaveActivity : AppCompatActivity(),View.OnClickListener,OnDSListener,OnDSP
     override fun onDroidSpeechLiveResult(liveSpeechResult: String?) {
         // Permet de visualiser le mot détécté prédefinit
         Log.i(TAG, "Live speech result = $liveSpeechResult")
-    }
-
-    override fun onDroidSpeechFinalResult(finalSpeechResult: String?) {
-        if (finalSpeechResult != null) {
-            if (finalSpeechResult.equals("Sauvegarder", ignoreCase = true)
-                || finalSpeechResult.toLowerCase().contains("Sauvegarder")
-            ) {
-                //Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
-                //openCamera()
-                prendrePhoto()
-                stopSpeech?.performClick()
-                //startSpeech.performClick();
-            }
-        }
     }
 
     override fun onDroidSpeechClosedByUser() {
