@@ -31,6 +31,8 @@ class SaveActivity : AppCompatActivity(),View.OnClickListener,OnDSListener,OnDSP
     private var hash: String? = null
     private var id_user: Int? = null
 
+    private var btnCapture: Button? = null
+
     private var alertDialog: AlertDialog? =null
 
 
@@ -56,6 +58,9 @@ class SaveActivity : AppCompatActivity(),View.OnClickListener,OnDSListener,OnDSP
         // todo: changer
         hash = "12d89521405e3032b39368f7b8801b24"
         id_user = 1
+
+        btnCapture = findViewById(R.id.capture)
+        btnCapture?.setOnClickListener(this)
 
         droidSpeech = DroidSpeech(this, null)
         droidSpeech!!.setOnDroidSpeechListener(this)
@@ -180,6 +185,11 @@ class SaveActivity : AppCompatActivity(),View.OnClickListener,OnDSListener,OnDSP
             AlertDialog.BUTTON_NEGATIVE->
             {
                 val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            }
+
+            R.id.capture ->
+            {
+                prendrePhoto()
             }
         }
     }
