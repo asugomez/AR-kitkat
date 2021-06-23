@@ -3,8 +3,7 @@ package com.ec.ardesignkitkat.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -15,6 +14,10 @@ import com.ec.ardesignkitkat.data.FurnitureRepository
 import com.ec.ardesignkitkat.data.model.Furniture
 import com.ec.ardesignkitkat.ui.main.adapter.FurnitureAdapter
 import com.ec.ardesignkitkat.ui.main.viewmodel.FurnViewModel
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.WriterException
+import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,6 +31,8 @@ class ListFurnitureActivity : AppCompatActivity() {
     private var progress: View? = null
     private var list: View? = null
     private var btnPartager: Button? = null
+    private var mTitle: TextView? = null
+    private var imageView3: ImageView? = null
 
     private var furnitures: MutableList<Furniture> ?= null
     //private var walls: MutableList<Wall> ?= null
@@ -53,6 +58,17 @@ class ListFurnitureActivity : AppCompatActivity() {
         initializeVariables()
         setUpRecyclerView()
         //changeToctivity()
+        btnPartager?.setOnClickListener {
+            val window = PopupWindow (this)
+            val view = layoutInflater.inflate(R.layout.qr_code_popup, null)
+            window.contentView=view
+            val imageView3 = view.findViewById<ImageView>(R.id.imageView3)
+            imageView3.setOnClickListener {
+                window.dismiss()
+            }
+            window.showAsDropDown(btnPartager)
+
+        }
     }
 
     fun initializeVariables(){
@@ -70,7 +86,19 @@ class ListFurnitureActivity : AppCompatActivity() {
     }
 
     fun partager(){
-        // todo
+        val multiFormatWriter = MultiFormatWriter()
+        mTitle = findViewById(R.id.mTitle)
+        imageView3 = findViewById(R.id.imageView3)
+
+        //try {
+            //val bitMatrix = multiFormatWriter.encode(mTitle.text.toString(), BarcodeFormat.QR_CODE, 300, 300)
+            //val barcodeEncoder = BarcodeEncoder()
+            //val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+            //imageView3.setImageBitmap(bitmap)
+        //}catch (e:WriterException){
+            //e.printStackTrace()
+        //}
+
     }
 
     fun setUpRecyclerView(){
