@@ -50,7 +50,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 1)
 
         // Enable AR-related functionality on ARCore supported devices only.
-        maybeEnableArButton()
+        //maybeEnableArButton()
     }
 
     fun initialize(){
