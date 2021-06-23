@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ec.ardesignkitkat.R
 import com.ec.ardesignkitkat.ui.main.mesure.helloar.HelloArActivity
+import com.ec.ardesignkitkat.ui.main.mesure.helloar.MesurerActivity
 import com.google.ar.core.ArCoreApk
 import com.vikramezhil.droidspeech.DroidSpeech
 import com.vikramezhil.droidspeech.OnDSListener
@@ -161,8 +162,11 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.mesure_btn -> {                // vers mesure activity
-                val intent = Intent(this, HelloArActivity::class.java)
+                val intent = Intent(this, MesurerActivity::class.java)
                 // .apply { putExtra(EXTRA_MESSAGE, "msg")}
+                intent.putExtra("hash", hash)
+                intent.putExtra("id_user", id_user )
+                intent.putExtra("pseudo_user", pseudo_user )
                 startActivity(intent)
             }
             R.id.visualisation_btn -> {          // vers visualisation activity
