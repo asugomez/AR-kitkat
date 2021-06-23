@@ -34,9 +34,16 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     private var timeCheckRunnable: Runnable? = null
     private var lastTimeWorking: Long? = null
 
-    var TAG = "DroidSpeech 3"
+    var TAG = "ARDesign accueil"
     private val TIME_RECHECK_DELAY: Int = 5000
     private val TIME_OUT_DELAY: Int = 4000
+    
+    private var hash: String? = null
+    private var id_user: String? = null
+    private var pseudo_user: String? = null
+    private var mail_user: String? = null
+    private var pass: String? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +53,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 1)
 
         // Enable AR-related functionality on ARCore supported devices only.
-        maybeEnableArButton()
+        //maybeEnableArButton()
     }
 
     fun initialize(){
@@ -57,6 +64,19 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         btnVisualisation?.setOnClickListener(this)
         btnVisualisation = findViewById(R.id.visualisation_btn)
         btnVisualisation?.setOnClickListener(this)
+
+        //recuperationdes données
+        hash = intent.getStringExtra("hash")
+        id_user = intent.getStringExtra("id_user")
+        pseudo_user = intent.getStringExtra("pseudo_user")
+        mail_user = intent.getStringExtra("mail_user")
+        pass = intent.getStringExtra("pass")
+
+        if(pseudo_user!=null){
+            this.title = "Bienvenue $pseudo_user !"
+        }else{
+            this.title = "Bienvenue !"
+        }
 
         //*** Bug detection handlers
         //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
@@ -85,7 +105,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     }
 
     private fun maybeEnableArButton() {
-        val availability = ArCoreApk.getInstance().checkAvailability(this)
+        val availability: ArCoreApk.Availability = ArCoreApk.getInstance().checkAvailability(this)
         if (availability.isTransient) {
             // Continue to query availability at 5Hz while compatibility is checked in the background.
             Handler().postDelayed({
@@ -111,14 +131,24 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         when (id) {
             R.id.menu_profil -> {
                 val iProfil = Intent(this, ProfileActivity::class.java)
+                iProfil.putExtra("hash", hash )
+                iProfil.putExtra("id_user", id_user )
+                iProfil.putExtra("pseudo_user", pseudo_user )
+                iProfil.putExtra("pass", pass )
+                iProfil.putExtra("mail", mail_user )
                 startActivity(iProfil)
             }
             R.id.menu_objets -> {
-                val iObjets = Intent(this, MesObjetsActivity::class.java)
+                //Toast.makeText(this@AccueilActivity, "click sur liste mes objets", Toast.LENGTH_SHORT).show()
+                val iObjets = Intent(this, ListFurnitureActivity::class.java)
+                iObjets.putExtra("hash", hash )
+                iObjets.putExtra("id_user", id_user )
+                iObjets.putExtra("pseudo_user", pseudo_user )
                 startActivity(iObjets)
             }
             R.id.menu_logout -> {
                 val iLogin = Intent(this, MainActivity::class.java)
+                hash = null
                 startActivity(iLogin)
             }
         }
@@ -145,26 +175,26 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Starting droid speech
                 // Démarrage de droid speech
 
-                //displayDroidSpeech.setContinuousSpeechRecognition(true);
-                droidSpeech?.startDroidSpeechRecognition();
+                //droid.setContinuousSpeechRecognition(true);
+                droidSpeech?.startDroidSpeechRecognition()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                Toast.makeText(this@AccueilActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
-                startSpeech?.setVisibility(View.GONE);
-                stopSpeech?.setVisibility(View.INVISIBLE);
+                //Toast.makeText(this@AccueilActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
+                startSpeech?.setVisibility(View.GONE)
+                stopSpeech?.setVisibility(View.INVISIBLE)
             }
             R.id.virtualStopButton-> {
 
                 // Closing droid speech
                 // Fermeture de droid speech
-                droidSpeech?.closeDroidSpeechOperations();
-                Toast.makeText(this@AccueilActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
+                droidSpeech?.closeDroidSpeechOperations()
+                //Toast.makeText(this@AccueilActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                stopSpeech?.setVisibility(View.GONE);
-                //startSpeech?.setVisibility(View.INVISIBLE);
+                stopSpeech?.setVisibility(View.GONE)
+                startSpeech?.setVisibility(View.INVISIBLE);
 
             }
         }
@@ -178,7 +208,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         if (finalSpeechResult.equals("Visualiser", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("visualiser")
         ) {
-            Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
             //openCamera()
             btnVisualisation?.performClick()
             stopSpeech?.performClick()
@@ -188,11 +218,19 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         if (finalSpeechResult.equals("Mesurer", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("mesurer")
         ) {
-            Toast.makeText(this@AccueilActivity, "final result: mesurer", Toast.LENGTH_SHORT).show()
-            //openCamera()
             btnMesure?.performClick()
             stopSpeech?.performClick()
-            //startSpeech.performClick();
+        }
+
+        if (finalSpeechResult.equals("Mes objets", ignoreCase = true)
+            || finalSpeechResult.toLowerCase().contains("mes objets")
+        ) {
+            val iObjets = Intent(this, ListFurnitureActivity::class.java)
+            iObjets.putExtra("hash", hash )
+            iObjets.putExtra("id_user", id_user )
+            iObjets.putExtra("pseudo_user", pseudo_user )
+            startActivity(iObjets)
+            stopSpeech?.performClick()
         }
     }
 
@@ -219,7 +257,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     override fun onDroidSpeechRmsChanged(rmsChangedValue: Float) {
 
         // Permet de visualiser des valeurs en nombre à chaque tonalité/ fréquence de la voix détécté
-        Log.i(TAG, "Rms change value = $rmsChangedValue")
+        //Log.i(TAG, "Rms change value = $rmsChangedValue")
         lastTimeWorking = System.currentTimeMillis()
     }
 

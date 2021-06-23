@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.os.Handler
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -48,12 +49,12 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
     private var droidSpeech: DroidSpeech?= null
 
     private var click: Int = 0
-    private var internetEnabled = true;
+    private var internetEnabled = true
     private var bugTimeCheckHandler: Handler? = null
     private var timeCheckRunnable: Runnable? = null
     private var lastTimeWorking: Long? = null
 
-    var TAG = "DroidSpeech 3"
+    var TAG = "ARDesign main"
     private val TIME_RECHECK_DELAY: Int = 5000
     private val TIME_OUT_DELAY: Int = 4000
 
@@ -74,6 +75,9 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
     }
 
     fun initialize(){
+        sp = PreferenceManager.getDefaultSharedPreferences(this)
+        editor = sp.edit()
+
         pseudo = findViewById(R.id.EditUser)
         mdp = findViewById(R.id.EditMdp)
         btnOK = findViewById(R.id.buttonOk)
@@ -91,7 +95,6 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
 
 
         droidSpeech = DroidSpeech(this, null)
-        droidSpeech!!.setOnDroidSpeechListener(this)
         droidSpeech!!.setOnDroidSpeechListener(this)
         droidSpeech!!.setShowRecognitionProgressView(false)
         droidSpeech!!.setOneStepResultVerify(false)
@@ -138,26 +141,26 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Starting droid speech
                 // Démarrage de droid speech
 
-                //displayDroidSpeech.setContinuousSpeechRecognition(true);
-                droidSpeech?.startDroidSpeechRecognition();
+                //displayDroidSpeech.setContinuousSpeechRecognition(true)
+                droidSpeech?.startDroidSpeechRecognition()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                Toast.makeText(this@MainActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
-                startSpeech?.setVisibility(View.GONE);
-                stopSpeech?.setVisibility(View.INVISIBLE);
+                //Toast.makeText(this@MainActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
+                startSpeech?.setVisibility(View.GONE)
+                stopSpeech?.setVisibility(View.INVISIBLE)
             }
             R.id.virtualStopButton-> {
 
                 // Closing droid speech
                 // Fermeture de droid speech
-                droidSpeech?.closeDroidSpeechOperations();
-                Toast.makeText(this@MainActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
+                droidSpeech?.closeDroidSpeechOperations()
+                //Toast.makeText(this@MainActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                stopSpeech?.setVisibility(View.GONE);
-                //startSpeech?.setVisibility(View.INVISIBLE);
+                stopSpeech?.setVisibility(View.GONE)
+                //startSpeech?.setVisibility(View.INVISIBLE)
 
             }
         }
@@ -167,28 +170,40 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
 
         activityScope.launch {
             try {
-                val hash = userRepository.connexion(ps,mdp)
+                Log.v(TAG,"function login")
+                val connexion = userRepository.connexion(ps,mdp)
+                val hash = connexion.hash
+                Log.v(TAG, connexion.toString())
+                Log.v(TAG, hash)
+                //Toast.makeText(this@MainActivity, hash, Toast.LENGTH_SHORT).show()
                 if(hash!=null)
                 {
-                    // Sauvegarder le token
-                    sessionManager.saveAuthToken(hash.hash)
-
+                    Log.v(TAG,"HASH NOT NULL")
+                    val id_user = connexion.id.toString()
+                    val pseudo_user = connexion.pseudo
+                    val mail_user = connexion.mail
+                    val pass = connexion.pass
                     //Garder dans shared preferences
                     editor.putString("login", ps)
                     editor.commit()
                     val l=sp.getString("login","null")
                     pseudo?.setText(l.toString())
                     val versAccueil: Intent= Intent(this@MainActivity, AccueilActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    //versAccueil.putExtra("hash",  )
+                    //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    versAccueil.putExtra("hash", hash )
+                    versAccueil.putExtra("id_user", id_user )
+                    versAccueil.putExtra("pseudo_user", pseudo_user )
+                    versAccueil.putExtra("mail_user", mail_user )
+                    versAccueil.putExtra("pass", pass )
                     startActivity(versAccueil)
                 }
                 else
-                    Toast.makeText(this@MainActivity, "Erreur de Connection", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Pseudo ou MDP incorrects", Toast.LENGTH_SHORT).show()
             }
             catch (e:Exception)
             {
-                Toast.makeText(this@MainActivity, "${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Pseudo ou MDP incorrects", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MainActivity, "${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -197,13 +212,10 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
     fun versAccueil(){
         activityScope.launch {
             try {
-                val versAccueil: Intent= Intent(this@MainActivity, AccueilActivity::class.java)
+                val versAccueil = Intent(this@MainActivity, AccueilActivity::class.java)
                 //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 //versAccueil.putExtra("hash",  )
                 startActivity(versAccueil)
-                //}
-                //else
-                //    Toast.makeText(this@MainActivity, "Erreur de Connection", Toast.LENGTH_SHORT).show()
             }
             catch (e:Exception)
             {
@@ -230,7 +242,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
         currentSpeechLanguage: String?,
         supportedSpeechLanguages: MutableList<String>?
     ) {
-        Log.i(TAG, "Supported speech languages = " + supportedSpeechLanguages.toString());
+        Log.v(TAG, "Supported speech languages = " + supportedSpeechLanguages.toString());
         if (supportedSpeechLanguages != null) {
             if(supportedSpeechLanguages.contains("fr-FR"))
             {
@@ -240,13 +252,13 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                 droidSpeech?.setPreferredLanguage("fr-FR");
             }
         }
-        Log.i(TAG, "Current speech language = " + currentSpeechLanguage);
+        Log.v(TAG, "Current speech language = " + currentSpeechLanguage);
     }
 
     override fun onDroidSpeechRmsChanged(rmsChangedValue: Float) {
 
         // Permet de visualiser des valeurs en nombre à chaque tonalité/ fréquence de la voix détécté
-        Log.i(TAG, "Rms change value = $rmsChangedValue")
+        //Log.i(TAG, "Rms change value = $rmsChangedValue")
         lastTimeWorking = System.currentTimeMillis()
     }
 

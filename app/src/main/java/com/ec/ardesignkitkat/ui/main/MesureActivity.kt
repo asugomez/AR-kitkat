@@ -9,7 +9,7 @@ import com.google.ar.core.exceptions.*
 
 class MesureActivity: AppCompatActivity() {
 
-    private lateinit var message: String
+    private var message: String = "test"
 
     // requestInstall(Activity, true) will triggers installation of
     // Google Play Services for AR if necessary.

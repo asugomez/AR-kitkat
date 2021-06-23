@@ -1,5 +1,6 @@
 package com.ec.ardesignkitkat.ui.main
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -55,15 +56,30 @@ class CreationCompteActivity : AppCompatActivity(), View.OnClickListener {
                 else{
                     activityScope.launch {
                         try {
-                            userRepository.mkUser(pseudo.toString(),mdp.toString(),mail.toString())
+                            if(userRepository.mkUser(pseudo?.text.toString(),mdp?.text.toString(),mail?.text.toString())){
+                                versLogin()
+                            }
                         }
                         catch (e:Exception)
                         {
-                            Toast.makeText(this@CreationCompteActivity, "${e.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@CreationCompteActivity, "Erreur dans la création d'utilisateur. Veuillez essayer avec un autre pseudo", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
 
+            }
+        }
+    }
+
+    fun versLogin(){
+        activityScope.launch {
+            try {
+                val versLogin = Intent(this@CreationCompteActivity, MainActivity::class.java)
+                startActivity(versLogin)
+            }
+            catch (e:Exception)
+            {
+                Toast.makeText(this@CreationCompteActivity, "${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

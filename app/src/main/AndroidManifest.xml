@@ -6,7 +6,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -26,13 +29,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.CreationCompteActivity">
-        </activity>
+        <activity android:name=".ui.main.CreationCompteActivity"/>
         <activity android:name=".ui.main.AccueilActivity" />
         <activity android:name=".ui.main.SaveActivity" />
         <activity android:name=".ui.main.VisualisationActivity"/>
         <activity android:name=".ui.main.MesureActivity"/>
-        <activity android:name=".ui.main.ProfileActivity"></activity>
+        <activity android:name=".ui.main.ProfileActivity"/>
+        <activity android:name=".ui.main.ListFurnitureActivity"/>
 
         <!-- "AR Optional" app, contains non-AR features that can be used when
          "Google Play Services for AR" (ARCore) is not available. -->

@@ -6,13 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.SaveActivity">
 
-    <Button
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/Capture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="prendrePhoto"
         android:text="Capture"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_input_add"
+        tools:layout_editor_absoluteX="200dp"
+        tools:layout_editor_absoluteY="621dp" />
+
+    <Button
+        android:id="@+id/virtualStartButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:text="b1"
+        tools:ignore="MissingConstraints" />
+
+
+    <Button
+        android:id="@+id/virtualStopButton"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="b2"
+        tools:ignore="MissingConstraints"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

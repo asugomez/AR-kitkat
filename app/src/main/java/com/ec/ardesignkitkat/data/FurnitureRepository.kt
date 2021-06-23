@@ -1,6 +1,7 @@
 package com.ec.ardesignkitkat.data
 
 import android.app.Application
+import android.util.Log
 import com.ec.ardesignkitkat.data.model.Furniture
 import com.ec.ardesignkitkat.data.model.Wall
 import com.ec.ardesignkitkat.data.source.local.LocalDataProvider
@@ -18,6 +19,8 @@ class FurnitureRepository(
             )
         }
     }
+
+    var TAG = "ARDesign furnrepository"
 
     suspend fun getFurnitures(hash: String): List<Furniture>{
         return try{
@@ -41,10 +44,16 @@ class FurnitureRepository(
 
     suspend fun getUsersFurnitures(idUser: Int, hash: String): List<Furniture>{
         return try{
+            //Log.v(TAG,"inside FURN REPOSITORY")
+            //Log.v(TAG,remoteDataProvider.getUsersFurnitures(idUser, hash).toString())
+            //Log.v(TAG,"inside after FURN REPOSITORY")
             remoteDataProvider.getUsersFurnitures(idUser, hash).also {
-                localDataProvider.saveOrUpdateFurnitures(it)
+                //Log.v(TAG,"inside also FURN REPOSITORY")
+                //localDataProvider.saveOrUpdateFurnitures(it)
+                //Log.v(TAG,"inside after FURN REPOSITORY")
             }
         } catch (e:Exception){
+            Log.v(TAG,"error FURN REPOSITORY")
             localDataProvider.getUsersFurnitures(idUser)
         }
     }
@@ -59,11 +68,11 @@ class FurnitureRepository(
         }
     }
 
-    suspend fun addUsersFurniture(id_user: Int, width: String, height: String, length: String, hash: String){
+    suspend fun addUsersFurniture(id_user: Int, width: String, height: String, length: String,nom:String, hash: String){
         return try{
-            remoteDataProvider.addUsersFurniture(id_user, width, height, length, hash)
+            remoteDataProvider.addUsersFurniture(id_user, width, height, length, nom, hash)
         } catch (e:Exception){
-            localDataProvider.addUsersFurniture(id_user, width, height, length)
+            localDataProvider.addUsersFurniture(id_user, width, height, length, nom)
         }
     }
 

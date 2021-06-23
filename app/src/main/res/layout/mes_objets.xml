@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MesObjets">
+    tools:context=".ui.main.ListFurnitureActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -16,16 +16,32 @@
             android:id="@+id/mRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
+        <ProgressBar
+            android:id="@+id/progressBarCh"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addingBtn"
-        android:src="@drawable/ic_add"
-        android:tint="@color/white"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="15dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/virtualStartButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:text="b1"
+        tools:ignore="MissingConstraints" />
+
+
+    <Button
+        android:id="@+id/virtualStopButton"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="b2"
+        tools:ignore="MissingConstraints"/>
+
 
 
 </RelativeLayout>

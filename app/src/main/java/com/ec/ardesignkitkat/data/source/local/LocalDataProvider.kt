@@ -1,6 +1,7 @@
 package com.ec.ardesignkitkat.data.source.local
 
 import android.app.Application
+import android.util.Log
 import androidx.room.Room
 import com.ec.ardesignkitkat.data.model.Furniture
 import com.ec.ardesignkitkat.data.model.StandardFurniture
@@ -11,6 +12,8 @@ import com.ec.ardesignkitkat.data.source.local.database.ObjectFurnitureDatabase
 class LocalDataProvider(
     application: Application
 ) {
+
+    var TAG = "ARDesign localdata provider"
 
     private val roomDatabase =
         Room.databaseBuilder(application, ObjectFurnitureDatabase::class.java, "room-database").build()
@@ -75,6 +78,7 @@ class LocalDataProvider(
     //////////////     FURNITURE       //////////////
 
     suspend fun saveOrUpdateFurnitures(furnitures: List<Furniture>){
+        Log.v(TAG,"inside local data provider save or update")
         return furnDao.saveOrUpdate(furnitures)
     }
 
@@ -94,8 +98,8 @@ class LocalDataProvider(
         return furnDao.getUsersFurniture(idFurn, idUser)
     }
 
-    suspend fun addUsersFurniture(idUser: Int, width: String, height: String, length: String){
-        return furnDao.addUsersFurniture(idUser, width, height, length)
+    suspend fun addUsersFurniture(idUser: Int, width: String, height: String, length: String, nom:String){
+        return furnDao.addUsersFurniture(idUser, width, height, length, nom)
     }
 
     suspend fun rmUsersFurniture(idFurn: Int, idUser: Int){

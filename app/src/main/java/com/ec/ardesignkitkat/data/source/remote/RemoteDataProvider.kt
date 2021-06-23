@@ -1,5 +1,6 @@
 package com.ec.ardesignkitkat.data.source.remote
 
+import android.util.Log
 import com.ec.ardesignkitkat.data.model.Furniture
 import com.ec.ardesignkitkat.data.model.StandardFurniture
 import com.ec.ardesignkitkat.data.model.User
@@ -12,9 +13,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RemoteDataProvider {
 
-    //todo: verify if it works with /api or not
-    //192.168.0.102
-    private val BASE_URL = "http://192.168.0.101:5555/~asugomez/AR-design/api/"
+    private val BASE_URL = "http://192.168.43.156/~asugomez/AR-design/api/"
+
+    var TAG = "ARDesign remotedataprovider"
 
     val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
         this.level = HttpLoggingInterceptor.Level.BODY
@@ -35,7 +36,7 @@ class RemoteDataProvider {
 
     //////////////      USER        //////////////
     suspend fun connexion(pseudo: String, pass:String): User {
-        return service.connexion(pseudo, pass)
+        return service.connexion(pseudo, pass).user
     }
 
     suspend fun getUsers(hash: String): List<User>{
@@ -50,8 +51,9 @@ class RemoteDataProvider {
         return service.getUserData(id_user, hash)
     }
 
-    suspend fun mkUser(pseudo: String, pass: String, mail: String){
-        return service.mkUser(pseudo, pass, mail)
+    suspend fun mkUser(pseudo: String, pass: String, mail: String): User{
+        Log.v(TAG, "mkuser remotedataprovider" )
+        return service.mkUser(pseudo, pass, mail).user
     }
 
     //////////////      WALL       //////////////
@@ -91,6 +93,8 @@ class RemoteDataProvider {
     }
 
     suspend fun getUsersFurnitures(id_user: Int, hash: String): List<Furniture>{
+        //Log.v(TAG,"inside remotedata getusers furnitures")
+        //Log.v(TAG,service.getUsersFurnitures(id_user, hash).furnitures.toString())
         return service.getUsersFurnitures(id_user, hash).furnitures
     }
 
@@ -98,8 +102,8 @@ class RemoteDataProvider {
         return service.getUsersFurniture(id_user, id_furn, hash)
     }
 
-    suspend fun addUsersFurniture(id_user: Int, width: String, height: String, length: String, hash: String){
-        return service.addUsersFurniture(id_user, width, height, length, hash)
+    suspend fun addUsersFurniture(id_user: Int, width: String, height: String, length: String, nom: String,hash: String){
+        return service.addUsersFurniture(id_user, width, height, length, nom, hash)
     }
 
     suspend fun rmUsersFurniture(id_user: Int, id_furn: Int, hash: String){

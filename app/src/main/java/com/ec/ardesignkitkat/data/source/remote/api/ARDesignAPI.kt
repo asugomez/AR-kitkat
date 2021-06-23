@@ -8,7 +8,7 @@ interface ARDesignAPI {
     //////////////      USER        //////////////
     @POST("authenticate")
     suspend fun connexion(@Query("user") user: String,
-                          @Query("password") password: String) : User
+                          @Query("password") password: String) : Login
 
     @GET("users")
     suspend fun getUsers(@Header("hash") hash: String): UserResponse
@@ -20,7 +20,7 @@ interface ARDesignAPI {
     @POST("users")
     suspend fun mkUser(@Query("pseudo") pseudo: String,
                        @Query("password") pass: String,
-                       @Query("mail") mail: String)
+                       @Query("mail") mail: String): Login
 
 
 
@@ -75,6 +75,7 @@ interface ARDesignAPI {
                                   @Query("width") width: String,
                                   @Query("heigth") heigth: String,
                                   @Query("length") length: String,
+                                  @Query("nom") nom : String,
                                   @Header("hash") hash: String)
 
     @DELETE("users/{idUser}/furnitures/{idFurn}")
