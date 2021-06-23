@@ -39,7 +39,7 @@ class SaveActivity : AppCompatActivity() {
 
     fun initialize(){
         // todo: changer
-        hash = "afasf"
+        hash = "12d89521405e3032b39368f7b8801b24"
         id_user = 1
     }
 
