@@ -162,7 +162,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.mesure_btn -> {                // vers mesure activity
-                val intent = Intent(this, MesurerActivity::class.java)
+                val intent = Intent(this, HelloArActivity::class.java)
                 // .apply { putExtra(EXTRA_MESSAGE, "msg")}
                 intent.putExtra("hash", hash)
                 intent.putExtra("id_user", id_user )
