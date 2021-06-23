@@ -2,6 +2,7 @@ package com.ec.ardesignkitkat.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
@@ -68,6 +69,14 @@ class ListFurnitureActivity : AppCompatActivity() {
             }
             window.showAsDropDown(btnPartager)
 
+            if(mTitle?.text.toString() != ""){
+                partager()
+            }else{
+                val toast = Toast.makeText(this, "Pas de nom de meuble", Toast.LENGTH_LONG)
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+            }
+
         }
     }
 
@@ -90,14 +99,14 @@ class ListFurnitureActivity : AppCompatActivity() {
         mTitle = findViewById(R.id.mTitle)
         imageView3 = findViewById(R.id.imageView3)
 
-        //try {
-            //val bitMatrix = multiFormatWriter.encode(mTitle.text.toString(), BarcodeFormat.QR_CODE, 300, 300)
-            //val barcodeEncoder = BarcodeEncoder()
-            //val bitmap = barcodeEncoder.createBitmap(bitMatrix)
-            //imageView3.setImageBitmap(bitmap)
-        //}catch (e:WriterException){
-            //e.printStackTrace()
-        //}
+        try {
+            val bitMatrix = multiFormatWriter.encode(mTitle?.text.toString(), BarcodeFormat.QR_CODE, 300, 300)
+            val barcodeEncoder = BarcodeEncoder()
+            val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+            imageView3?.setImageBitmap(bitmap)
+        }catch (e:WriterException){
+            e.printStackTrace()
+        }
 
     }
 
