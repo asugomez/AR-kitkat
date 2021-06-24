@@ -70,8 +70,10 @@ class FurnitureRepository(
 
     suspend fun addUsersFurniture(id_user: Int, width: String, height: String, length: String,nom:String, hash: String){
         return try{
+            Log.i(TAG, "fonction add users furniture")
             remoteDataProvider.addUsersFurniture(id_user, width, height, length, nom, hash)
         } catch (e:Exception){
+            Log.i(TAG, "ERROR fonction add users furniture")
             localDataProvider.addUsersFurniture(id_user, width, height, length, nom)
         }
     }
