@@ -5,8 +5,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.os.Handler
 import android.preference.PreferenceManager
 import android.util.Log
@@ -152,15 +150,16 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
             }
             R.id.virtualStopButton-> {
 
-                // Closing droid speech
-                // Fermeture de droid speech
-                droidSpeech?.closeDroidSpeechOperations()
-                //Toast.makeText(this@MainActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(this@MainActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
                 stopSpeech?.setVisibility(View.GONE)
-                //startSpeech?.setVisibility(View.INVISIBLE)
+                startSpeech?.setVisibility(View.INVISIBLE)
+                // Closing droid speech
+                // Fermeture de droid speech
+                droidSpeech?.closeDroidSpeechOperations()
 
             }
         }
@@ -223,6 +222,19 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
             }
         }
     }
+    override fun onPause() {
+        super.onPause()
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
+        }
+    }
 
     override fun onDroidSpeechFinalResult(finalSpeechResult: String) {
         // Setting the final speech result
@@ -231,9 +243,9 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
         if (finalSpeechResult.equals("Commencer", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("commencer")
         ) {
-            Toast.makeText(this@MainActivity, "final result: commencer", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this@MainActivity, "final result: commencer", Toast.LENGTH_SHORT).show()
             btnInvite?.performClick()
-            stopSpeech?.performClick()
+            onDestroy()
         }
     }
 
@@ -250,6 +262,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Définir la langue préférée du discours de droid speech en français
 
                 droidSpeech?.setPreferredLanguage("fr-FR");
+
             }
         }
         Log.v(TAG, "Current speech language = " + currentSpeechLanguage);

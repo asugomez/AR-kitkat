@@ -87,7 +87,6 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
         droidSpeech = DroidSpeech(this, null)
         droidSpeech!!.setOnDroidSpeechListener(this)
-        droidSpeech!!.setOnDroidSpeechListener(this)
         droidSpeech!!.setShowRecognitionProgressView(false)
         droidSpeech!!.setOneStepResultVerify(false)
 
@@ -103,6 +102,20 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         startSpeech?.performClick()
 
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
+        }
     }
 
     private fun maybeEnableArButton() {
@@ -210,26 +223,34 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         // Setting the final speech result
         //Possibilité de modifier les mots-clés
         //Définir un comportement pour chaque mot-clé
+        Log.i(TAG, finalSpeechResult)
+
         if (finalSpeechResult.equals("Visualiser", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("visualiser")
         ) {
-            //Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@AccueilActivity, "Visualiser", Toast.LENGTH_SHORT).show()
             //openCamera()
             btnVisualisation?.performClick()
-            stopSpeech?.performClick()
+            //stopSpeech?.performClick()
+            onDestroy()
             //startSpeech.performClick();
         }
 
         if (finalSpeechResult.equals("Mesurer", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("mesurer")
+            || finalSpeechResult.toLowerCase().contains("mets")
+            || finalSpeechResult.toLowerCase().contains("sur")
         ) {
+            Toast.makeText(this@AccueilActivity, "Mesurer", Toast.LENGTH_SHORT).show()
             btnMesure?.performClick()
             stopSpeech?.performClick()
+            onDestroy()
         }
 
         if (finalSpeechResult.equals("Mes objets", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("mes objets")
         ) {
+            Toast.makeText(this@AccueilActivity, "Mes objets", Toast.LENGTH_SHORT).show()
             val iObjets = Intent(this, ListFurnitureActivity::class.java)
             iObjets.putExtra("hash", hash )
             iObjets.putExtra("id_user", id_user )

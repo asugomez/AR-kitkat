@@ -140,6 +140,19 @@ class ListFurnitureActivity : AppCompatActivity(),View.OnClickListener,OnDSListe
             }
         }
     }
+    override fun onPause() {
+        super.onPause()
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
+        }
+    }
 
     fun partager(){
         /*adapter?.setOnItemClickListener(object: FurnitureAdapter.OnItemClickListener{
