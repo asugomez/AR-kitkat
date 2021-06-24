@@ -300,7 +300,7 @@ class MesurerActivity : AppCompatActivity(), SampleRender.Renderer, View.OnClick
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                Toast.makeText(this@MesurerActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MesurerActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
                 startSpeech?.setVisibility(View.GONE)
                 stopSpeech?.setVisibility(View.INVISIBLE)
             }
@@ -309,7 +309,7 @@ class MesurerActivity : AppCompatActivity(), SampleRender.Renderer, View.OnClick
                 // Closing droid speech
                 // Fermeture de droid speech
                 droidSpeech?.closeDroidSpeechOperations()
-                Toast.makeText(this@MesurerActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MesurerActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
@@ -357,6 +357,9 @@ class MesurerActivity : AppCompatActivity(), SampleRender.Renderer, View.OnClick
             session = null
         }
         super.onDestroy()
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
+        }
     }
 
     override fun onResume() {
@@ -437,6 +440,9 @@ class MesurerActivity : AppCompatActivity(), SampleRender.Renderer, View.OnClick
             displayRotationHelper!!.onPause()
             surfaceView!!.onPause()
             session!!.pause()
+        }
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
         }
     }
 
@@ -979,10 +985,13 @@ class MesurerActivity : AppCompatActivity(), SampleRender.Renderer, View.OnClick
     }
     // adnroid speech
 
+
     override fun onDroidSpeechFinalResult(finalSpeechResult: String?) {
         if (finalSpeechResult != null) {
             if (finalSpeechResult.equals("Sauvegarder", ignoreCase = true)
-                || finalSpeechResult.toLowerCase().contains("sauvegarder")
+                || finalSpeechResult.toLowerCase().contains("sauve")
+                || finalSpeechResult.equals("Save", ignoreCase = true)
+                || finalSpeechResult.toLowerCase().contains("save")
             ) {
                 //Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
                 //openCamera()
@@ -1023,6 +1032,7 @@ class MesurerActivity : AppCompatActivity(), SampleRender.Renderer, View.OnClick
                 // Définir la langue préférée du discours de droid speech en français
 
                 droidSpeech?.setPreferredLanguage("fr-FR");
+                droidSpeech?.setPreferredLanguage("en-US");
             }
         }
         Log.i(TAG, "Current speech language = " + currentSpeechLanguage);

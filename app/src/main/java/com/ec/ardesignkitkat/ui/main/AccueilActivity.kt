@@ -4,9 +4,9 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ec.ardesignkitkat.R
 import com.ec.ardesignkitkat.ui.main.mesure.helloar.HelloArActivity
-import com.ec.ardesignkitkat.ui.main.mesure.helloar.MesurerActivity
 import com.google.ar.core.ArCoreApk
 import com.vikramezhil.droidspeech.DroidSpeech
 import com.vikramezhil.droidspeech.OnDSListener
@@ -27,7 +26,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
     private var stopSpeech: Button? = null
     private var btnMesure: Button? = null
     private var btnVisualisation: Button? = null
-    private var droidSpeech: DroidSpeech?= null
+    private var droidSpeechAccueil: DroidSpeech?= null
 
     private var click: Int = 0
     private var internetEnabled = true;
@@ -49,9 +48,36 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val inflatedView: View = layoutInflater.inflate(R.layout.activity_main,null)
+
+        val btnStop = inflatedView.findViewById<Button>(R.id.virtualStopButton)
+        val btnStart = inflatedView.findViewById<Button>(R.id.virtualStartButton)
+        Log.i(TAG, btnStop.toString())
+
+        btnStop.performClick()
         setContentView(R.layout.accueil)
+        //MainActivity.stopSpeech.performClick()
+        //val binding: MainActivityBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        //Log.i(TAG, btnStop.performClick().toString())
         initialize()
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 1)
+        //*** Bug detection handlers
+        //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
+
+        droidSpeechAccueil = DroidSpeech(this, null)
+        droidSpeechAccueil!!.setOnDroidSpeechListener(this)
+        droidSpeechAccueil!!.setShowRecognitionProgressView(false)
+        droidSpeechAccueil!!.setOneStepResultVerify(false)
+
+        //bouton detection vocale
+        startSpeech = findViewById(R.id.virtualStartButton)
+        startSpeech?.setOnClickListener(this)
+
+        stopSpeech = findViewById(R.id.virtualStopButton)
+        stopSpeech?.setOnClickListener(this)
+
+        //Let's start listening
+        //Initiation de l'écoute
+        startSpeech?.performClick()
 
         // Enable AR-related functionality on ARCore supported devices only.
         //maybeEnableArButton()
@@ -79,30 +105,22 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
             this.title = "Bienvenue !"
         }
 
-        //*** Bug detection handlers
-        //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
-        //*** Bug detection handlers
-        //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
 
 
-        droidSpeech = DroidSpeech(this, null)
-        droidSpeech!!.setOnDroidSpeechListener(this)
-        droidSpeech!!.setOnDroidSpeechListener(this)
-        droidSpeech!!.setShowRecognitionProgressView(false)
-        droidSpeech!!.setOneStepResultVerify(false)
+    }
 
-        //bouton detection vocale
-        startSpeech = findViewById(R.id.virtualStartButton)
-        startSpeech?.setOnClickListener(this)
+    override fun onPause() {
+        super.onPause()
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
+        }
+    }
 
-        stopSpeech = findViewById(R.id.virtualStopButton)
-        stopSpeech?.setOnClickListener(this)
-
-        //Let's start listening
-        //Initiation de l'écoute
-        startSpeech?.performClick()
-
-
+    override fun onDestroy() {
+        super.onDestroy()
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
+        }
     }
 
     private fun maybeEnableArButton() {
@@ -138,6 +156,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 iProfil.putExtra("pass", pass )
                 iProfil.putExtra("mail", mail_user )
                 startActivity(iProfil)
+                startSpeech?.performClick()
             }
             R.id.menu_objets -> {
                 //Toast.makeText(this@AccueilActivity, "click sur liste mes objets", Toast.LENGTH_SHORT).show()
@@ -146,11 +165,13 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 iObjets.putExtra("id_user", id_user )
                 iObjets.putExtra("pseudo_user", pseudo_user )
                 startActivity(iObjets)
+                startSpeech?.performClick()
             }
             R.id.menu_logout -> {
                 val iLogin = Intent(this, MainActivity::class.java)
                 hash = null
                 startActivity(iLogin)
+                startSpeech?.performClick()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -166,7 +187,6 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // .apply { putExtra(EXTRA_MESSAGE, "msg")}
                 intent.putExtra("hash", hash)
                 intent.putExtra("id_user", id_user)
-                Log.i(TAG, "id user: " + id_user)
                 intent.putExtra("pseudo_user", pseudo_user )
                 startActivity(intent)
             }
@@ -181,7 +201,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Démarrage de droid speech
 
                 //droid.setContinuousSpeechRecognition(true);
-                droidSpeech?.startDroidSpeechRecognition()
+                droidSpeechAccueil?.startDroidSpeechRecognition()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
@@ -193,7 +213,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
 
                 // Closing droid speech
                 // Fermeture de droid speech
-                droidSpeech?.closeDroidSpeechOperations()
+                droidSpeechAccueil?.closeDroidSpeechOperations()
                 //Toast.makeText(this@AccueilActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
 
                 // Setting the view visibilities when droid speech is running
@@ -210,32 +230,40 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
         // Setting the final speech result
         //Possibilité de modifier les mots-clés
         //Définir un comportement pour chaque mot-clé
+        Log.i(TAG, finalSpeechResult)
+
         if (finalSpeechResult.equals("Visualiser", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("visualiser")
         ) {
-            //Toast.makeText(this@AccueilActivity, "final result: visualiser", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@AccueilActivity, "Visualiser", Toast.LENGTH_SHORT).show()
             //openCamera()
             btnVisualisation?.performClick()
-            stopSpeech?.performClick()
-            //startSpeech.performClick();
+            startSpeech?.performClick()
         }
 
         if (finalSpeechResult.equals("Mesurer", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("mesurer")
+            || finalSpeechResult.toLowerCase().contains("mets")
+            || finalSpeechResult.toLowerCase().contains("sur")
         ) {
+            Toast.makeText(this@AccueilActivity, "Mesurer", Toast.LENGTH_SHORT).show()
             btnMesure?.performClick()
-            stopSpeech?.performClick()
+            startSpeech?.performClick()
+            //stopSpeech?.performClick()
+            //onDestroy()
         }
 
         if (finalSpeechResult.equals("Mes objets", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("mes objets")
         ) {
+            Toast.makeText(this@AccueilActivity, "Mes objets", Toast.LENGTH_SHORT).show()
             val iObjets = Intent(this, ListFurnitureActivity::class.java)
             iObjets.putExtra("hash", hash )
             iObjets.putExtra("id_user", id_user )
             iObjets.putExtra("pseudo_user", pseudo_user )
             startActivity(iObjets)
-            stopSpeech?.performClick()
+            startSpeech?.performClick()
+            //stopSpeech?.performClick()
         }
     }
 
@@ -253,7 +281,7 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Setting the droid speech preferred language as french
                 // Définir la langue préférée du discours de droid speech en français
 
-                droidSpeech?.setPreferredLanguage("fr-FR");
+                droidSpeechAccueil?.setPreferredLanguage("fr-FR");
             }
         }
         Log.i(TAG, "Current speech language = " + currentSpeechLanguage);

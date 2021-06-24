@@ -5,8 +5,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.os.Handler
 import android.preference.PreferenceManager
 import android.util.Log
@@ -69,30 +67,12 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initialize()
+
         sessionManager = SessionManager(application)
+
+        //*** Bug detection handlers
+        //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 1)
-
-    }
-
-    fun initialize(){
-        sp = PreferenceManager.getDefaultSharedPreferences(this)
-        editor = sp.edit()
-
-        pseudo = findViewById(R.id.EditUser)
-        mdp = findViewById(R.id.EditMdp)
-        btnOK = findViewById(R.id.buttonOk)
-        btnEnregistrer= findViewById(R.id.Enregistrer)
-        btnInvite = findViewById(R.id.Invite)
-
-        btnOK!!.setOnClickListener(this)
-        btnEnregistrer!!.setOnClickListener(this)
-        btnInvite!!.setOnClickListener(this)
-
-        //*** Bug detection handlers
-        //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
-        //*** Bug detection handlers
-        //Permet de détécter les bugs si le listener ne répond pas dans un délai précis et de faire une ré-activation du listener pour continuer la détéction
-
 
         droidSpeech = DroidSpeech(this, null)
         droidSpeech!!.setOnDroidSpeechListener(this)
@@ -110,6 +90,25 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
         //Initiation de l'écoute
         startSpeech?.performClick()
 
+
+    }
+
+    fun initialize(){
+        sp = PreferenceManager.getDefaultSharedPreferences(this)
+        editor = sp.edit()
+
+        pseudo = findViewById(R.id.EditUser)
+        mdp = findViewById(R.id.EditMdp)
+        btnOK = findViewById(R.id.buttonOk)
+        btnEnregistrer= findViewById(R.id.Enregistrer)
+        btnInvite = findViewById(R.id.Invite)
+
+        btnOK!!.setOnClickListener(this)
+        btnEnregistrer!!.setOnClickListener(this)
+        btnInvite!!.setOnClickListener(this)
+
+
+
     }
 
     override fun onClick(v: View?) {
@@ -124,6 +123,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                     ).show()
                 }
                 else{
+                    //onPause()
                     login(pseudoTxt, mdpTxt)
                 }
             }
@@ -152,15 +152,20 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
             }
             R.id.virtualStopButton-> {
 
-                // Closing droid speech
-                // Fermeture de droid speech
-                droidSpeech?.closeDroidSpeechOperations()
+
                 //Toast.makeText(this@MainActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
+
+                // Fermeture de droid speech
+                Log.i(TAG, droidSpeech?.closeDroidSpeechOperations().toString())
+                droidSpeech?.closeDroidSpeechOperations()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
+                // Closing droid speech
+                Log.i(TAG, "inside r id virtual stop button")
                 stopSpeech?.setVisibility(View.GONE)
-                //startSpeech?.setVisibility(View.INVISIBLE)
+                startSpeech?.setVisibility(View.INVISIBLE)
+
 
             }
         }
@@ -173,8 +178,6 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                 Log.v(TAG,"function login")
                 val connexion = userRepository.connexion(ps,mdp)
                 val hash = connexion.hash
-                Log.v(TAG, connexion.toString())
-                Log.v(TAG, hash)
                 //Toast.makeText(this@MainActivity, hash, Toast.LENGTH_SHORT).show()
                 if(hash!=null)
                 {
@@ -215,12 +218,26 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                 val versAccueil = Intent(this@MainActivity, AccueilActivity::class.java)
                 //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 //versAccueil.putExtra("hash",  )
+                //onPause()
                 startActivity(versAccueil)
             }
             catch (e:Exception)
             {
                 Toast.makeText(this@MainActivity, "${e.message}", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+    override fun onPause() {
+        super.onPause()
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (stopSpeech?.getVisibility() === View.VISIBLE) {
+            stopSpeech?.performClick()
         }
     }
 
@@ -231,9 +248,11 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
         if (finalSpeechResult.equals("Commencer", ignoreCase = true)
             || finalSpeechResult.toLowerCase().contains("commencer")
         ) {
-            Toast.makeText(this@MainActivity, "final result: commencer", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this@MainActivity, "final result: commencer", Toast.LENGTH_SHORT).show()
             btnInvite?.performClick()
-            stopSpeech?.performClick()
+            startSpeech?.performClick()
+
+            //onDestroy()
         }
     }
 
@@ -250,6 +269,7 @@ class MainActivity :AppCompatActivity(), View.OnClickListener, OnDSListener,
                 // Définir la langue préférée du discours de droid speech en français
 
                 droidSpeech?.setPreferredLanguage("fr-FR");
+
             }
         }
         Log.v(TAG, "Current speech language = " + currentSpeechLanguage);
@@ -318,3 +338,20 @@ is MainViewModel.ViewState.Content ->{
                         .show()
                 }
  */
+
+/*
+bugTimeCheckHandler = Handler()
+timeCheckRunnable = object : Runnable {
+    override fun run() {
+        //Log.i(TAG, "Handler 1 running...");
+        val timeDifference = System.currentTimeMillis() - lastTimeWorking!!
+        if (timeDifference > TIME_OUT_DELAY && internetEnabled) {
+            Log.e(TAG, "Bug Detected ! Restart listener...")
+            stopSpeech!!.performClick()
+            startSpeech!!.performClick()
+        }
+        bugTimeCheckHandler!!.postDelayed(this, TIME_RECHECK_DELAY.toLong())
+    }
+}
+bugTimeCheckHandler!!.postDelayed(timeCheckRunnable as Runnable, TIME_RECHECK_DELAY.toLong())
+*/
