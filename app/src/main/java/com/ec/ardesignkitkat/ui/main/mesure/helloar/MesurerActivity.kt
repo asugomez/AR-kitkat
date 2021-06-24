@@ -16,6 +16,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.ec.ardesignkitkat.R
 import com.ec.ardesignkitkat.data.FurnitureRepository
+import com.ec.ardesignkitkat.ui.main.AccueilActivity
+import com.ec.ardesignkitkat.ui.main.ListFurnitureActivity
 import com.ec.ardesignkitkat.ui.main.mesure.common.helpers.*
 import com.ec.ardesignkitkat.ui.main.mesure.common.samplerender.*
 import com.ec.ardesignkitkat.ui.main.mesure.common.samplerender.arcore.BackgroundRenderer
@@ -123,7 +125,7 @@ class MesurerActivity : AppCompatActivity(), SampleRender.Renderer, View.OnClick
     private var alertDialog: AlertDialog? =null
 
 
-    var TAG = "DroidSpeech 3"
+    var TAG = "ARDesign mesurer"
 
     private var internetEnabled = true
 
@@ -238,7 +240,9 @@ class MesurerActivity : AppCompatActivity(), SampleRender.Renderer, View.OnClick
         val btnSauvegarder = dialogLayout.findViewById<Button>(R.id.btnSauvegarder)
         builder.setView(dialogLayout)
         btnSauvegarder.setOnClickListener{
+            //Toast.makeText(this@MesurerActivity, nom_object.text.toString(), Toast.LENGTH_SHORT).show()
             sauvergarder(nom_object.text.toString(), l_object.text.toString(), w_object.text.toString(), h_object.text.toString())
+            versListFurniture()
         }
         /*builder.setPositiveButton("Sauvegarder") {
                 dialogInterface, i ->
@@ -248,13 +252,34 @@ class MesurerActivity : AppCompatActivity(), SampleRender.Renderer, View.OnClick
 
     }
 
+    fun versListFurniture(){
+        activityScope.launch {
+            try {
+                val versFurniture= Intent(this@MesurerActivity, ListFurnitureActivity::class.java)
+                versFurniture.putExtra("hash", hash )
+                versFurniture.putExtra("id_user", id_user )
+                versFurniture.putExtra("pseudo_user", pseudo_user)
+                        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                //versAccueil.putExtra("hash",  )
+                startActivity(versFurniture)
+            }
+            catch (e:Exception)
+            {
+                Toast.makeText(this@MesurerActivity, "${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     fun sauvergarder(nom:String, length: String, width: String, height: String){
         activityScope.launch{
             try{
                 if(hash!=null){
+                    Log.i(TAG, "fonction sauvegarder")
+                    Log.i(TAG, "id user: " + id_user)
                     furnitureRepository.addUsersFurniture(id_user!!.toInt(), width, height, length,nom, hash!!)
                 }
             } catch (e: Exception){
+                Log.i(TAG, "ERROR fonction sauvegarder")
                 Toast.makeText(this@MesurerActivity, "${e.message}", Toast.LENGTH_SHORT).show()
             }
         }

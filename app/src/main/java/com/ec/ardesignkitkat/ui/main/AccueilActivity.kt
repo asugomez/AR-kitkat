@@ -165,7 +165,8 @@ class AccueilActivity : AppCompatActivity(), View.OnClickListener, OnDSListener,
                 val intent = Intent(this, HelloArActivity::class.java)
                 // .apply { putExtra(EXTRA_MESSAGE, "msg")}
                 intent.putExtra("hash", hash)
-                intent.putExtra("id_user", id_user )
+                intent.putExtra("id_user", id_user)
+                Log.i(TAG, "id user: " + id_user)
                 intent.putExtra("pseudo_user", pseudo_user )
                 startActivity(intent)
             }

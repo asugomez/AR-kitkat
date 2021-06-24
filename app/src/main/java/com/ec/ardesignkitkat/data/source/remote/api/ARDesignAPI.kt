@@ -73,7 +73,7 @@ interface ARDesignAPI {
     @POST("users/{idUser}/furnitures")
     suspend fun addUsersFurniture(@Path("idUser") id_user: Int,
                                   @Query("width") width: String,
-                                  @Query("heigth") heigth: String,
+                                  @Query("height") heigth: String,
                                   @Query("length") length: String,
                                   @Query("nom") nom : String,
                                   @Header("hash") hash: String)
