@@ -300,7 +300,7 @@ class MesurerActivity : AppCompatActivity(), SampleRender.Renderer, View.OnClick
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
-                Toast.makeText(this@MesurerActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MesurerActivity, "click sur btn start button", Toast.LENGTH_SHORT).show()
                 startSpeech?.setVisibility(View.GONE)
                 stopSpeech?.setVisibility(View.INVISIBLE)
             }
@@ -309,7 +309,7 @@ class MesurerActivity : AppCompatActivity(), SampleRender.Renderer, View.OnClick
                 // Closing droid speech
                 // Fermeture de droid speech
                 droidSpeech?.closeDroidSpeechOperations()
-                Toast.makeText(this@MesurerActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MesurerActivity, "click sur btn stop button", Toast.LENGTH_SHORT).show()
 
                 // Setting the view visibilities when droid speech is running
                 // Définir les visibilité des vues quand droid speech est en marche
